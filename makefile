@@ -11,7 +11,7 @@ COMPILER_FLAGS = -w
 OUTPUT = main.exec
 
 #Objects to compile
-OBJS = main.cpp
+OBJS = main.cpp Game.h Game.cpp
 
 all: main.cpp
 	${CC} ${OBJS} ${COMPILER_FLAGS} ${LINKER_FLAGS} -o ${OUTPUT}

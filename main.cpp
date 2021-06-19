@@ -1,43 +1,19 @@
-#include <stdio.h>
-#include <SDL2/SDL.h>
-#include "setup.cpp"
-#include "inpututils.cpp"
+#include "Game.h"
 
 using namespace std;
+Game* game = nullptr;
 
 int main(int argc, char* args[]){
-    
-    if(!init()){
-        printf("Failed to initialize SDL, error: %s\n", SDL_GetError());
-    }
-    else{
-            //Main loop flag
-            bool quit = false;
-            //Event handler
-            SDL_Event e;
-            //Run the window until quit is true 
-            while(!quit){
-                while(SDL_PollEvent(&e) != 0){
-                    //Request to quit
-                    if(e.type == SDL_QUIT){
-                        quit = true;
-                    }
-                    else if(e.type == SDL_KEYDOWN){
-                        testArrows(e);
-                    }
-                }
-                //Clear screen
-                SDL_RenderClear(gRenderer);
+    game = new Game();
 
-                //Render texture to screen
-                SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
+    game->init("Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
 
-                //Update screen
-                SDL_RenderPresent(gRenderer); 
-            }
-        
+    while(game->running()){
+        game->handleEvents();
+        game->update();
+        game->render();
     }
-    
-    close();
+
+    game->clean();
     return 0;
 }
