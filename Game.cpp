@@ -1,7 +1,6 @@
 #include "Game.h"
 
 Game::Game(){
-
 }
 
 Game::~Game(){
@@ -35,6 +34,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         }
 
         isRunning = true;
+
+        // Initialize gameobjects
+        this->player = new GameObject("assets/images/Dude.png", this->renderer);
     }
     else{
         std::cout << "SDL could not initialize!" << std::endl;
@@ -63,6 +65,9 @@ void Game::render(){
     // Clear old stuff that shouldn't be rendered
     SDL_RenderClear(this->renderer);
     // Add stuff to render here
+    // The last thing painted is the foremost in the image
+    player->render(this->renderer);
+    // ------------------------
     SDL_RenderPresent(this->renderer);
 }
 

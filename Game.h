@@ -4,6 +4,11 @@
 #include "SDL2/SDL.h"
 #include <stdio.h>
 #include <iostream>
+#include "SDL2/SDL_image.h"
+#include "Vector2.h"
+#include "Constants.h"
+#include "GameObject.h"
+#include "TextureManager.h"
 
 class Game{
     public:
@@ -23,6 +28,7 @@ class Game{
         bool isRunning;
         SDL_Window* window;
         SDL_Renderer* renderer;
+        GameObject* player;
 };
 
 
