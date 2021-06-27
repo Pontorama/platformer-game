@@ -9,6 +9,7 @@
 #include "Constants.h"
 #include "GameObject.h"
 #include "TextureManager.h"
+#include "Player.h"
 
 class Game{
     public:
@@ -28,7 +29,7 @@ class Game{
         bool isRunning;
         SDL_Window* window;
         SDL_Renderer* renderer;
-        GameObject* player;
+        Player* player;
 };
 
 

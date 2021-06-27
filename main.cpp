@@ -7,7 +7,7 @@ Game* game = nullptr;
 int main(int argc, char* args[]){
 
     // Set FPS so game doesn't run based on processor clock speed
-    const int frameDelay = 1000 / FRAMERATE;
+    const float frameDelay = 1000 / FRAMERATE;
 
     Uint32 framestart;
     int frametime;
@@ -20,7 +20,7 @@ int main(int argc, char* args[]){
         // Do game loop
         framestart = SDL_GetTicks();
 
-        game->handleEvents();
+        game->handleEvents(); // Events might need to be handled in separate loop
         game->update();
         game->render();
 

@@ -13,7 +13,8 @@ class Vector2{
         float x;
         float y;
         float getLength();
-        Vector2* getNormalised();
+        Vector2 getNormalised();
+        void normalise();
 };
 
 #endif
