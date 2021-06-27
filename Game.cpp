@@ -36,7 +36,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         isRunning = true;
 
         // Initialize gameobjects
-        this->player = new GameObject("assets/images/Dude.png", this->renderer);
+        player = new Player("assets/images/Dude.png", this->renderer);
     }
     else{
         std::cout << "SDL could not initialize!" << std::endl;
@@ -51,14 +51,14 @@ void Game::handleEvents(){
         case SDL_QUIT:
             isRunning = false;
             break;
-
         default:
+            player->handleEvents(event);
             break;
     }
 }
 
 void Game::update(){
-
+    player->update();
 }   
 
 void Game::render(){
@@ -66,7 +66,7 @@ void Game::render(){
     SDL_RenderClear(this->renderer);
     // Add stuff to render here
     // The last thing painted is the foremost in the image
-    player->render(this->renderer);
+    player->render();
     // ------------------------
     SDL_RenderPresent(this->renderer);
 }

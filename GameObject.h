@@ -10,20 +10,22 @@
 
 class GameObject{
     public:
+        GameObject();
         GameObject(const char* textureSheet, SDL_Renderer* ren);
         ~GameObject();  
 
         float getXPos();
         float getYPos();
-        Vector2* getPos();
+        Vector2 getPos();
 
         void update();
-        void render(SDL_Renderer* ren);
+        void render();
     protected:
-        Vector2* pos;
+        Vector2 pos;
 
         SDL_Texture* objTexture;
         SDL_Rect srcRect, destRect;
+        SDL_Renderer* ren;
 };
 
 #endif /* GameObject_h */
