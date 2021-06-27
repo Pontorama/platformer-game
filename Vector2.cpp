@@ -19,10 +19,17 @@ float Vector2::getLength(){
 }
 
 Vector2 Vector2::getNormalised(){
-    return Vector2(this->x/getLength(), this->y/getLength());
+    float len = getLength();
+    if(len != 0){
+        return Vector2(x/len, y/len);
+    }
+    // TODO add error handling?
 }
 
 void Vector2::normalise(){
-    this->x = x / getLength();
-    this->y = y / getLength();
+    float len = getLength();
+    if(len != 0){
+        x = x / len;
+        y = y / len;
+    }
 }
