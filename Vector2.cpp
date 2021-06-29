@@ -33,3 +33,5 @@ void Vector2::normalise(){
         y = y / len;
     }
 }
+
+// TODO implement multiplication, scalar multiplication and addition

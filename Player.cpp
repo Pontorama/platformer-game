@@ -1,18 +1,24 @@
 #include "Player.h"
 
 Player::Player(){
-    this->speed = 5;
+    this->speed = {0,0};
+    this->acceleration = 0.0005;
+
+    pos = {0,0};
 }
 
 Player::Player(const char* textureSheet, SDL_Renderer* ren) : GameObject(textureSheet, ren){
-    this->speed = 0.25;
+    this->speed = {0,0};
+    this->acceleration = 0.0005;
+
+    pos = {0,0};
 }
 
 Player::~Player(){
 
 }
 
-float Player::getSpeed(){
+Vector2 Player::getSpeed(){
     return this->speed;
 }
 
@@ -61,12 +67,28 @@ void Player::handleEvents(SDL_Event e){
     }
     // Always normalise
     this->dir.normalise();
-    // Check for length in each direction
+    // Cap dir vector to avoid clipping
+    if(std::abs(dir.x) > MAX_DIR_LEN){
+        dir.x = dir.x / std::abs(dir.x) * MAX_DIR_LEN;
+    }
+    if(std::abs(dir.y) > MAX_DIR_LEN){
+        dir.y = dir.y / std::abs(dir.y) * MAX_DIR_LEN;
+    }
 }
 
 void Player::update(){
-    this->destRect.x += (pos.x + dir.x * speed * TIME_PER_FRAME);
-    this->destRect.y += (pos.y + dir.y * speed * TIME_PER_FRAME);
+    // Update speed & position
+    speed.x += dir.x * acceleration * TIME_PER_FRAME * TIME_PER_FRAME /2;
+    speed.y += dir.y * acceleration * TIME_PER_FRAME * TIME_PER_FRAME /2;
+    // TODO Limit max speed
+    pos.x += speed.x * TIME_PER_FRAME;
+    pos.y += speed.y * TIME_PER_FRAME;
+    
+    destRect.x = pos.x;
+    destRect.y = pos.y;
+
+    
+    // Parent update function
     GameObject::update();
 }
 
