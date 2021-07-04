@@ -21,11 +21,11 @@ class GameObject{
         void update();
         void render();
     protected:
-        Vector2 pos;
+        Vector2 _pos;
 
-        SDL_Texture* objTexture;
-        SDL_Rect srcRect, destRect;
-        SDL_Renderer* ren;
+        SDL_Texture* _objTexture;
+        SDL_Rect _srcRect, _destRect;
+        SDL_Renderer* _ren;
 };
 
 #endif /* GameObject_h */

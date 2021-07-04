@@ -26,10 +26,10 @@ class Game{
         bool running();
 
     private:
-        bool isRunning;
-        SDL_Window* window;
-        SDL_Renderer* renderer;
-        Player* player;
+        bool _isRunning;
+        SDL_Window* _window;
+        SDL_Renderer* _renderer;
+        Player* _player;
 };
 
 

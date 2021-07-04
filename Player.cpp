@@ -1,17 +1,17 @@
 #include "Player.h"
 
 Player::Player(){
-    this->speed = {0,0};
-    this->acceleration = 0.0005;
+    _speed = {0,0};
+    _acceleration = 0.0005;
 
-    pos = {0,0};
+    _pos = {0,0};
 }
 
 Player::Player(const char* textureSheet, SDL_Renderer* ren) : GameObject(textureSheet, ren){
-    this->speed = {0,0};
-    this->acceleration = 0.0005;
+    _speed = {0,0};
+    _acceleration = 0.0005;
 
-    pos = {0,0};
+    _pos = {0,0};
 }
 
 Player::~Player(){
@@ -19,7 +19,7 @@ Player::~Player(){
 }
 
 Vector2 Player::getSpeed(){
-    return this->speed;
+    return _speed;
 }
 
 void Player::handleEvents(SDL_Event e){
@@ -29,19 +29,19 @@ void Player::handleEvents(SDL_Event e){
             // TODO add check for length in each dimension so movement does not clip
             case SDLK_w:
                 // Move player up
-                this->dir.y += -1;
+                _dir.y += -1;
                 break;
             case SDLK_s:
                 // Move player down
-                this->dir.y += 1;
+                _dir.y += 1;
                 break;
             case SDLK_d:
                 // Move player right
-                this->dir.x += 1;
+                _dir.x += 1;
                 break;
             case SDLK_a:
                 // Move player left
-                this->dir.x += -1;
+                _dir.x += -1;
                 break;
             default:
                 break;
@@ -50,42 +50,46 @@ void Player::handleEvents(SDL_Event e){
         // If key is released player should stop moving
         switch(e.key.keysym.sym){
             case SDLK_w:
-                this->dir.y = 0;
+                _dir.y = 0;
                 break;
             case SDLK_s:
-                this->dir.y = 0;
+                _dir.y = 0;
                 break;
             case SDLK_d:
-                this->dir.x = 0;
+                _dir.x = 0;
                 break;
             case SDLK_a:
-                this->dir.x = 0;
+                _dir.x = 0;
                 break;
             default:
                 break;
         }
     }
     // Always normalise
-    this->dir.normalise();
+    _dir.normalise();
     // Cap dir vector to avoid clipping
-    if(std::abs(dir.x) > MAX_DIR_LEN){
-        dir.x = dir.x / std::abs(dir.x) * MAX_DIR_LEN;
+    if(std::abs(_dir.x) > MAX_DIR_LEN){
+        _dir.x = _dir.x / std::abs(_dir.x) * MAX_DIR_LEN;
     }
-    if(std::abs(dir.y) > MAX_DIR_LEN){
-        dir.y = dir.y / std::abs(dir.y) * MAX_DIR_LEN;
+    if(std::abs(_dir.y) > MAX_DIR_LEN){
+        _dir.y = _dir.y / std::abs(_dir.y) * MAX_DIR_LEN;
     }
 }
 
 void Player::update(){
     // Update speed & position
-    speed.x += dir.x * acceleration * TIME_PER_FRAME * TIME_PER_FRAME /2;
-    speed.y += dir.y * acceleration * TIME_PER_FRAME * TIME_PER_FRAME /2;
-    // TODO Limit max speed
-    pos.x += speed.x * TIME_PER_FRAME;
-    pos.y += speed.y * TIME_PER_FRAME;
+    _speed += _dir * _acceleration * TIME_PER_FRAME;
+    if(_speed.getLength() > PLAYER_MAX_SPEED){
+        _speed = _speed * (PLAYER_MAX_SPEED / _speed.getLength());
+    }
+
+    // TODO implement decceleration & gravity
+
+    _pos.x += _speed.x * TIME_PER_FRAME;
+    _pos.y += _speed.y * TIME_PER_FRAME;
     
-    destRect.x = pos.x;
-    destRect.y = pos.y;
+    _destRect.x = _pos.x;
+    _destRect.y = _pos.y;
 
     
     // Parent update function

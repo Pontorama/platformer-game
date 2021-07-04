@@ -21,26 +21,26 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         std::cout << "SDL subsystems initialized successfully!" << std::endl;
 
         // Create window
-        window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
-        if(window){
+        _window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
+        if(_window){
             std::cout << "Window created!" << std::endl;
         }
 
         // Create renderer
-        renderer = SDL_CreateRenderer(window, -1, 0);
-        if(renderer){
-            SDL_SetRenderDrawColor(this->renderer, 255, 255, 255, 255);
+        _renderer = SDL_CreateRenderer(_window, -1, 0);
+        if(_renderer){
+            SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
             std::cout << "Renderer Created!" << std::endl;
         }
 
-        isRunning = true;
+        _isRunning = true;
 
         // Initialize gameobjects
-        player = new Player("assets/images/Dude.png", this->renderer);
+        _player = new Player("assets/images/Dude.png", _renderer);
     }
     else{
         std::cout << "SDL could not initialize!" << std::endl;
-        isRunning = false;
+        _isRunning = false;
     }
 }
 
@@ -49,34 +49,34 @@ void Game::handleEvents(){
     SDL_PollEvent(&event);
     switch(event.type){
         case SDL_QUIT:
-            isRunning = false;
+            _isRunning = false;
             break;
         default:
-            player->handleEvents(event);
+            _player->handleEvents(event);
             break;
     }
 }
 
 void Game::update(){
-    player->update();
+    _player->update();
 }   
 
 void Game::render(){
     // Clear old stuff that shouldn't be rendered
-    SDL_RenderClear(this->renderer);
+    SDL_RenderClear(_renderer);
     // Add stuff to render here
     // The last thing painted is the foremost in the image
-    player->render();
+    _player->render();
     // ------------------------
-    SDL_RenderPresent(this->renderer);
+    SDL_RenderPresent(_renderer);
 }
 
 void Game::clean(){
     // Clean up resources
-    SDL_DestroyWindow(this->window);
-    SDL_DestroyRenderer(this->renderer);
+    SDL_DestroyWindow(_window);
+    SDL_DestroyRenderer(_renderer);
     SDL_Quit();
     std::cout << "Game cleaned." << std::endl;
 }
 
-bool Game::running(){ return this->isRunning;}
+bool Game::running(){ return _isRunning;}
