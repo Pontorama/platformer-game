@@ -1,5 +1,5 @@
-#include "Game.h"
-#include "Constants.h"
+#include "./src/Game.h"
+#include "./src/Constants.h"
 
 using namespace std;
 Game* game = nullptr;

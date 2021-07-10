@@ -11,7 +11,7 @@ COMPILER_FLAGS = -w
 OUTPUT = main.exec
 
 #Objects to compile
-OBJS = main.cpp Game.h Game.cpp GameObject.h GameObject.cpp Player.h Player.cpp TextureManager.h TextureManager.cpp Vector2.h Vector2.cpp
+OBJS = main.cpp src/Game.h src/Game.cpp src/GameObject.h src/GameObject.cpp src/Player.h src/Player.cpp src/TextureManager.h src/TextureManager.cpp src/Vector2.h src/Vector2.cpp src/Platform.h src/Platform.cpp src/Hitbox.h src/Hitbox.cpp
 
 all: main.cpp
 	${CC} ${OBJS} ${COMPILER_FLAGS} ${LINKER_FLAGS} -o ${OUTPUT}
