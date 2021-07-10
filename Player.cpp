@@ -77,14 +77,24 @@ void Player::handleEvents(SDL_Event e){
 }
 
 void Player::update(){
+    bool accelerating = std::abs(_dir.x) > 0;
+
     // Update speed & position
     _speed += _dir * _acceleration * TIME_PER_FRAME;
     if(_speed.getLength() > PLAYER_MAX_SPEED){
         _speed = _speed * (PLAYER_MAX_SPEED / _speed.getLength());
     }
 
-    // TODO implement decceleration & gravity
+    // TODO implement gravity
+    if(!accelerating) // Only deccelerate if not accelerating
+        _speed += _speed * (-1*_speed.getLength()*_speed.getLength() * PLAYER_SLOWDOWN_ACC * TIME_PER_FRAME);
 
+
+    // Stop player completely if speed is low enough
+    if(std::abs(_speed.x) <= PLAYER_MIN_SPEED && !accelerating)
+        _speed.x = 0;
+
+    // Update player position
     _pos.x += _speed.x * TIME_PER_FRAME;
     _pos.y += _speed.y * TIME_PER_FRAME;
     

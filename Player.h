@@ -24,6 +24,7 @@ class Player : GameObject{
         const float MAX_DIR_LEN = 1.5; // Does not need to be global
         const float PLAYER_MAX_SPEED = 0.5;
         const float PLAYER_SLOWDOWN_ACC = 0.1;
+        const float PLAYER_MIN_SPEED = PLAYER_MAX_SPEED / 8;
 };
 
 #endif /* Player_h */
