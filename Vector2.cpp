@@ -23,7 +23,7 @@ Vector2 Vector2::getNormalised(){
     if(len != 0){
         return Vector2(x/len, y/len);
     }
-    // TODO add error handling?
+    
 }
 
 void Vector2::normalise(){
