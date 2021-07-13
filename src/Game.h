@@ -24,6 +24,7 @@ class Game{
         void render(); // Render gameobjects & other things to screen
         void clean();
 
+
         bool running();
 
     private:
@@ -32,6 +33,7 @@ class Game{
         SDL_Renderer* _renderer;
         Player* _player;
         std::vector<GameObject*> _gameObjects; // Potential FIXME , might not be how to handle lists in this case
+        void _checkForCollisions();
 };
 
 

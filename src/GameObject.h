@@ -10,9 +10,6 @@
 #include <vector>
 #include "Hitbox.h"
 
-// TODO implement hit detection
-// Use _destRect for bounding box?
-
 class GameObject{
     public:
         // Constructors
@@ -27,6 +24,11 @@ class GameObject{
         float getXPos();
         float getYPos();
         Vector2 getPos();
+        int getMask();
+
+        GameObject* isColliding(GameObject* other);
+        void actOnCollision(GameObject* other);
+        virtual void handleEvents(SDL_Event e); // TODO this breaks player controls?
 
         // Update and render
         void update();
@@ -39,8 +41,7 @@ class GameObject{
         SDL_Texture* _objTexture;
         SDL_Rect _srcRect, _destRect;
         SDL_Renderer* _ren;
-
-        std::vector<Hitbox*>* _hitboxes; // Potential FIXME , might not be how to handle lists in this case
+        std::vector<Hitbox*> _hitboxes; // Potential FIXME , might not be how to handle lists in this case
 };
 
 #endif /* GameObject_h */

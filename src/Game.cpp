@@ -6,7 +6,6 @@ Game::Game(){
 }
 
 Game::~Game(){
-
 }
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen){
@@ -42,7 +41,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
         _gameObjects = std::vector<GameObject*>();
 
-        _gameObjects.push_back(new Platform("assets/images/Platform.png", _renderer, Vector2(10,20)));
+        _gameObjects.push_back(_player);
+        _gameObjects.push_back(new Platform("assets/images/Platform.png", _renderer, Vector2(200,20)));
+
+        std::cout << "Game objects initialized!" << std::endl;
     }
     else{
         std::cout << "SDL could not initialize!" << std::endl;
@@ -59,35 +61,56 @@ void Game::handleEvents(){
             _isRunning = false;
             break;
         default:
-            _player->handleEvents(event);
+            for(int i = 0; i < _gameObjects.size(); i++){
+                _gameObjects[i]->handleEvents(event);
+            }
             break;
     }
 }
 
 void Game::update(){
-    _player->update();
-
     for(int i = 0; i< _gameObjects.size(); i++){
         _gameObjects[i]->update();
     }
-}   
+}
 
 void Game::render(){
     // Clear old stuff that shouldn't be rendered
     SDL_RenderClear(_renderer);
     // Add stuff to render here
     // The last thing painted is the foremost in the image
-    _player->render();
+    for(int i = 0; i < _gameObjects.size(); i++){
+        _gameObjects[i]->render();
+    }
     // ------------------------
     SDL_RenderPresent(_renderer);
 }
 
 void Game::clean(){
+    // Make sure to deconstruct all gameobjects    
+    for(int i = 0; i < _gameObjects.size(); i++){
+        _gameObjects[i]->~GameObject();
+    }
     // Clean up resources
     SDL_DestroyWindow(_window);
     SDL_DestroyRenderer(_renderer);
     SDL_Quit();
+
     std::cout << "Game cleaned." << std::endl;
+}
+
+void Game::_checkForCollisions(){
+    for(int i = 0; i < _gameObjects.size(); i++){
+        for(int j = i; j < _gameObjects.size(); j++){
+            GameObject* result = _gameObjects[i]->isColliding(_gameObjects[j]);
+
+            if(result != nullptr){
+                // Act on collision
+                _gameObjects[i]->actOnCollision(result);
+                result->actOnCollision(_gameObjects[i]);
+            }
+        }
+    }
 }
 
 bool Game::running(){ return _isRunning;}

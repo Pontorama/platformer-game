@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-class Platform :public  GameObject{
+class Platform : public  GameObject{
     // A simple platform, primarily to test things
     // TODO use same pos and dimensions as texture
     public:
@@ -9,4 +9,7 @@ class Platform :public  GameObject{
 
         void render();
         void update();
+
+    private:
+        void actOnCollision(GameObject* other);
 };

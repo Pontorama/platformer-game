@@ -8,7 +8,7 @@
 #include <iostream>
 #include <cmath>
 
-class Player : GameObject{
+class Player : public GameObject{
     public:
         Player();
         Player(const char* textureSheet, SDL_Renderer* ren);
@@ -16,6 +16,7 @@ class Player : GameObject{
 
         Vector2 getSpeed();
         void handleEvents(SDL_Event e);
+        void actOnCollision(GameObject* other);
         void update();
         void render();
     private:

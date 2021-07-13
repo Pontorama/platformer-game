@@ -14,7 +14,7 @@ Player::Player(const char* textureSheet, SDL_Renderer* ren) : GameObject(texture
     _pos = {0,0};
 
     Hitbox* hb = new Hitbox(_pos, _imageSize);
-    _hitboxes->push_back(hb);
+    _hitboxes.push_back(hb);
 }
 
 Player::~Player(){
@@ -111,4 +111,13 @@ void Player::update(){
 
 void Player::render(){
     GameObject::render();
+}
+
+void Player::actOnCollision(GameObject* other){
+    // This function should be called upon collision with another hitbox
+    // other is a pointer to the object the player colliding with
+    if(other->getMask() == TERRAIN_MASK){
+        // Colliding with terrain
+        std::cout << "Player colliding with terrain" << std::endl;
+    }
 }
