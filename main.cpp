@@ -22,6 +22,7 @@ int main(int argc, char* args[]){
 
         game->handleEvents(); // Events might need to be handled in separate loop
         game->update();
+        game->checkForCollisions();
         game->render();
 
         frametime = SDL_GetTicks() - framestart;

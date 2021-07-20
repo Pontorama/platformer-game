@@ -99,13 +99,13 @@ void Game::clean(){
     std::cout << "Game cleaned." << std::endl;
 }
 
-void Game::_checkForCollisions(){
+void Game::checkForCollisions(){
     for(int i = 0; i < _gameObjects.size(); i++){
-        for(int j = i; j < _gameObjects.size(); j++){
+        for(int j = i+1; j < _gameObjects.size(); j++){
             GameObject* result = _gameObjects[i]->isColliding(_gameObjects[j]);
-
             if(result != nullptr){
                 // Act on collision
+                std::cout << "Debug: Collision detected!" << std::endl;
                 _gameObjects[i]->actOnCollision(result);
                 result->actOnCollision(_gameObjects[i]);
             }

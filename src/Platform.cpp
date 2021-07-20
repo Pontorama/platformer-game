@@ -17,3 +17,7 @@ void Platform::render(){
 void Platform::update(){
     
 }
+
+void Platform::actOnCollision(GameObject* other){
+    std::cout << "Platform detected collision" << std::endl;
+}

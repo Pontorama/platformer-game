@@ -116,6 +116,7 @@ void Player::render(){
 void Player::actOnCollision(GameObject* other){
     // This function should be called upon collision with another hitbox
     // other is a pointer to the object the player colliding with
+    std::cout << "Collision with player" << std::endl;
     if(other->getMask() == TERRAIN_MASK){
         // Colliding with terrain
         std::cout << "Player colliding with terrain" << std::endl;

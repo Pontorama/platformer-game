@@ -65,8 +65,8 @@ Vector2 GameObject::getPos(){
 
 GameObject* GameObject::isColliding(GameObject* other){
     for(int i = 0; i < _hitboxes.size(); i++){
-        for(int j = 0; j < other->_hitboxes.size(); j++){
-            if(_hitboxes[i]->overlaps(other->_hitboxes[j])){
+        for(int j = i+1; j < other->getHitboxCount(); j++){
+            if(_hitboxes[i]->overlaps(other->getHitbox(j))){
                 return other;
             }
         }
@@ -84,4 +84,16 @@ void GameObject::actOnCollision(GameObject* other){
 
 void GameObject::handleEvents(SDL_Event e){
     
+}
+
+int GameObject::getHitboxCount(){
+    return _hitboxes.size();
+}
+
+Hitbox GameObject::getHitbox(int index){
+    return *_hitboxes[index];
+}
+
+std::string GameObject::getName(){
+    return _name;
 }

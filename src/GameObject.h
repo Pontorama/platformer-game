@@ -25,14 +25,19 @@ class GameObject{
         float getYPos();
         Vector2 getPos();
         int getMask();
+        std::string getName();
 
         GameObject* isColliding(GameObject* other);
-        void actOnCollision(GameObject* other);
+        virtual void actOnCollision(GameObject* other);
         virtual void handleEvents(SDL_Event e); // TODO this breaks player controls?
 
+        // Hitbox getters
+        int getHitboxCount();
+        Hitbox getHitbox(int index);
+
         // Update and render
-        void update();
-        void render();
+        virtual void update();
+        virtual void render();
     protected:
         void _init(const char* textureSheet, SDL_Renderer* ren);
         Vector2 _pos;
@@ -42,6 +47,7 @@ class GameObject{
         SDL_Rect _srcRect, _destRect;
         SDL_Renderer* _ren;
         std::vector<Hitbox*> _hitboxes; // Potential FIXME , might not be how to handle lists in this case
+        std::string _name;
 };
 
 #endif /* GameObject_h */

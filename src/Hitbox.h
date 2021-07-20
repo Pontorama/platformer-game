@@ -7,7 +7,7 @@ class Hitbox{
     public:
         Hitbox();
         Hitbox(Vector2 pos, Vector2 size);
-        bool overlaps(Hitbox* other);
+        bool overlaps(Hitbox other);
         Vector2 getPos();
         Vector2 getSize();
     private:

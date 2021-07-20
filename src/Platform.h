@@ -9,7 +9,6 @@ class Platform : public  GameObject{
 
         void render();
         void update();
-
     private:
         void actOnCollision(GameObject* other);
 };
