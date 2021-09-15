@@ -13,7 +13,12 @@ Hitbox::Hitbox(Vector2 pos, Vector2 size){
 bool Hitbox::overlaps(Hitbox other){
     Vector2 otherPos = other.getPos();
     Vector2 otherSize = other.getSize();
-    return !((otherPos.y > _pos.y+_size.y) && (otherPos.x > _pos.x+_size.x) && (otherPos.x + otherSize.x < _pos.x) && (otherPos.y + otherSize.y < _pos.y));
+    return !((otherPos.x + otherSize.x < _pos.x) || (otherPos.x > _pos.x+_size.x)) && !((otherPos.y > _pos.y+_size.y) || (otherPos.y + otherSize.y < _pos.y));
+}
+
+void Hitbox::move(Vector2 v){
+    // Adds the vector v to hitbox position
+    _pos += v;
 }
 
 Vector2 Hitbox::getPos(){

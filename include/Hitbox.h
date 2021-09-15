@@ -9,6 +9,7 @@ class Hitbox{
         Hitbox(Vector2 pos, Vector2 size);
         bool overlaps(Hitbox other);
         Vector2 getPos();
+        void move(Vector2 v);
         Vector2 getSize();
     private:
         Vector2 _pos;

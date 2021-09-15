@@ -15,6 +15,7 @@ class Player : public GameObject{
         ~Player();
 
         Vector2 getSpeed();
+        
         void handleEvents(SDL_Event e);
         void actOnCollision(GameObject* other);
         void update();

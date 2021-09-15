@@ -98,13 +98,16 @@ void Player::update(){
         _speed.x = 0;
 
     // Update player position
-    _pos.x += _speed.x * TIME_PER_FRAME;
-    _pos.y += _speed.y * TIME_PER_FRAME;
-    
+    _pos += _speed * TIME_PER_FRAME;
+
+    // Move hitboxes with player
+    for(int i = 0; i < _hitboxes.size(); i++){
+        _hitboxes[i]->move(_speed * TIME_PER_FRAME);
+    }
+
     _destRect.x = _pos.x;
     _destRect.y = _pos.y;
 
-    
     // Parent update function
     GameObject::update();
 }
@@ -116,9 +119,8 @@ void Player::render(){
 void Player::actOnCollision(GameObject* other){
     // This function should be called upon collision with another hitbox
     // other is a pointer to the object the player colliding with
-    std::cout << "Collision with player" << std::endl;
     if(other->getMask() == TERRAIN_MASK){
         // Colliding with terrain
-        std::cout << "Player colliding with terrain" << std::endl;
+        
     }
 }

@@ -56,3 +56,7 @@ void Vector2::operator+=(const Vector2 &v){
     this->x+=v.x;
     this->y+=v.y;
 }
+
+std::string Vector2::toString(){
+    return "X: " + std::to_string(this->x) + " Y: " + std::to_string(this->y);
+}

@@ -65,7 +65,7 @@ Vector2 GameObject::getPos(){
 
 GameObject* GameObject::isColliding(GameObject* other){
     for(int i = 0; i < _hitboxes.size(); i++){
-        for(int j = i+1; j < other->getHitboxCount(); j++){
+        for(int j = 0; j < other->getHitboxCount(); j++){
             if(_hitboxes[i]->overlaps(other->getHitbox(j))){
                 return other;
             }

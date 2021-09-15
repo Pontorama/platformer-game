@@ -2,6 +2,7 @@
 #define Vector2_h
 
 #include <math.h>
+#include <string>
 
 class Vector2{
     public:
@@ -20,6 +21,7 @@ class Vector2{
         float getLength();
         Vector2 getNormalised();
         void normalise();
+        std::string toString();
 };
 
 #endif

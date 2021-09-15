@@ -5,16 +5,16 @@ CC = g++
 LINKER_FLAGS = -lSDL2 -lSDL2_image
 
 #Compiler flags
-COMPILER_FLAGS = -w
+COMPILER_FLAGS = -w -Iinclude -Ilib
 
 #Name of output file
-OUTPUT = main
+OUTPUT = bin/main
 
 #Objects to compile
-OBJS = main.cpp src/Game.h src/Game.cpp src/GameObject.h src/GameObject.cpp src/Player.h src/Player.cpp src/TextureManager.h src/TextureManager.cpp src/Vector2.h src/Vector2.cpp src/Platform.h src/Platform.cpp src/Hitbox.h src/Hitbox.cpp
+OBJS = src/main.cpp src/Game.cpp src/GameObject.cpp src/Player.cpp src/TextureManager.cpp src/Vector2.cpp src/Platform.cpp src/Hitbox.cpp
 
 all:
-	${CC} ${OBJS} ${COMPILER_FLAGS} ${LINKER_FLAGS} -o ${OUTPUT}
+	${CC} ${COMPILER_FLAGS} ${OBJS} ${LINKER_FLAGS} -o ${OUTPUT}
 
 debug:
-	${CC} ${OBJS} ${COMPILER_FLAGS} ${LINKER_FLAGS} -g -o main.debug
+	${CC} ${COMPILER_FLAGS} ${OBJS} ${LINKER_FLAGS} -g -o bin/main.debug

@@ -1,6 +1,6 @@
 #include "Game.h"
 
-// TODO Player and platform not showing up after rescale in GameObject.cpp
+using namespace std;
 
 Game::Game(){
 }
@@ -44,10 +44,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         _gameObjects.push_back(_player);
         _gameObjects.push_back(new Platform("assets/images/Platform.png", _renderer, Vector2(200,20)));
 
-        std::cout << "Game objects initialized!" << std::endl;
+        cout << "Game objects initialized!" << endl;
     }
     else{
-        std::cout << "SDL could not initialize!" << std::endl;
+        cout << "SDL could not initialize!" << endl;
         _isRunning = false;
     }
 
@@ -69,6 +69,7 @@ void Game::handleEvents(){
 }
 
 void Game::update(){
+    checkForCollisions();
     for(int i = 0; i< _gameObjects.size(); i++){
         _gameObjects[i]->update();
     }
@@ -96,7 +97,7 @@ void Game::clean(){
     SDL_DestroyRenderer(_renderer);
     SDL_Quit();
 
-    std::cout << "Game cleaned." << std::endl;
+    cout << "Game cleaned." << endl;
 }
 
 void Game::checkForCollisions(){
@@ -105,7 +106,6 @@ void Game::checkForCollisions(){
             GameObject* result = _gameObjects[i]->isColliding(_gameObjects[j]);
             if(result != nullptr){
                 // Act on collision
-                std::cout << "Debug: Collision detected!" << std::endl;
                 _gameObjects[i]->actOnCollision(result);
                 result->actOnCollision(_gameObjects[i]);
             }
@@ -113,4 +113,6 @@ void Game::checkForCollisions(){
     }
 }
 
-bool Game::running(){ return _isRunning;}
+bool Game::running(){ 
+    return _isRunning;
+    }
