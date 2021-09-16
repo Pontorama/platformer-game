@@ -60,3 +60,8 @@ void Vector2::operator+=(const Vector2 &v){
 std::string Vector2::toString(){
     return "X: " + std::to_string(this->x) + " Y: " + std::to_string(this->y);
 }
+
+Vector2 Vector2::operator%(const Vector2 &v){
+    // Elementwise multiplication
+    return Vector2(this->x * v.x, this->y * v.y);
+}

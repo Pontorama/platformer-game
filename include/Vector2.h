@@ -15,6 +15,7 @@ class Vector2{
         float operator*(const Vector2 &v);
         Vector2 operator*(float s);
         void operator+=(const Vector2 &v);
+        Vector2 operator%(const Vector2 &v);
 
         float x;
         float y;
