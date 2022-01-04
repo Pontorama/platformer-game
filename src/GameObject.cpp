@@ -1,9 +1,11 @@
 #include "GameObject.h"
 
-GameObject::GameObject(const char* textureSheet, SDL_Renderer* ren){
+using namespace std;
 
+GameObject::GameObject(const char* textureSheet, SDL_Renderer* ren){
     _pos = Vector2(0,0);
     _init(textureSheet, ren);
+    _renderer = ren;
 }
 
 GameObject::GameObject(const char* textureSheet, SDL_Renderer* ren, Vector2 pos){
@@ -25,7 +27,7 @@ void GameObject::_init(const char* textureSheet, SDL_Renderer* ren){
     _srcRect = {0, 0, w, h};
     _destRect = {(int)_pos.x, (int)_pos.y, (int)_imageSize.x, (int)_imageSize.y};
 
-    _hitboxes = std::vector<Hitbox*>();
+    _hitboxes = vector<Hitbox*>();
 }
 
 GameObject::GameObject(){
@@ -44,11 +46,13 @@ GameObject::~GameObject(){
 }
 
 void GameObject::update(){
-    
 }
 
 void GameObject::render(){
     SDL_RenderCopy(_ren, _objTexture, &_srcRect, &_destRect);
+    if(DEBUG_MODE){
+        drawHitboxOutlines();
+    }
 }
 
 float GameObject::getXPos(){
@@ -63,23 +67,23 @@ Vector2 GameObject::getPos(){
     return _pos; // Should be pointer?
 }
 
-GameObject* GameObject::isColliding(GameObject* other){
+tuple<Hitbox*, Hitbox*> GameObject::isColliding(GameObject* other){
+    // Returns overlapping hitboxes as a tuple
+    // <Other, This>
+    tuple<Hitbox*, Hitbox*> out;
     for(int i = 0; i < _hitboxes.size(); i++){
         for(int j = 0; j < other->getHitboxCount(); j++){
             if(_hitboxes[i]->overlaps(other->getHitbox(j))){
-                return other;
+                out = make_tuple(other->getHitbox(j), _hitboxes[i]);
+                return out;
             }
         }
     }
-    return nullptr;
+    return make_tuple(nullptr, nullptr);
 }
 
-int GameObject::getMask(){
-    return _mask;
-}
-
-void GameObject::actOnCollision(GameObject* other){
-
+void GameObject::actOnCollision(Hitbox* local_hitbox, Hitbox* other){
+    // Local hitbox is the hitbox belonging to this gameobject, other is hitbox belonging to other gameobject
 }
 
 void GameObject::handleEvents(SDL_Event e){
@@ -90,10 +94,44 @@ int GameObject::getHitboxCount(){
     return _hitboxes.size();
 }
 
-Hitbox GameObject::getHitbox(int index){
-    return *_hitboxes[index];
+Hitbox* GameObject::getHitbox(int index){
+    return _hitboxes[index];
 }
 
-std::string GameObject::getName(){
+string GameObject::getName(){
     return _name;
+}
+
+void GameObject::drawHitboxOutlines(){
+    // Set color to red
+    SDL_SetRenderDrawColor(_renderer, 234, 19, 27, 255);
+    // Draw lines
+    for(int i = 0; i < this->getHitboxCount(); i++){
+        Vector2 pos = _hitboxes[i]->getPos();
+        Vector2 size = _hitboxes[i]->getSize();
+        // Draw X-lines
+        for(int u = (int)pos.x; u < (int)(pos.x + size.x); u++){
+            SDL_RenderDrawPoint(_renderer, u, (int)pos.y);
+            SDL_RenderDrawPoint(_renderer, u, (int)(pos.y + size.y));
+        }
+        // Draw Y-lines
+        for(int v = (int)pos.y; v < (int)(pos.y + size.y); v++){
+            SDL_RenderDrawPoint(_renderer, (int)pos.x, v);
+            SDL_RenderDrawPoint(_renderer, (int)(pos.x + size.x), v);
+        }
+    }
+}
+
+void GameObject::setPosition(Vector2 newPos){
+    // Teleport the gameobject to a new position
+    
+    // Calculate the offset of all hitboxes in relation to the gameobject position
+    // And teleport the hitboxes keeping the offset
+    for(int i = 0; i < _hitboxes.size(); i++){
+        Vector2 offset = _hitboxes[i]->getPos() + _pos * -1;
+        _hitboxes[i]->setPosition(newPos + offset);
+    }
+    
+    _pos = newPos;
+
 }

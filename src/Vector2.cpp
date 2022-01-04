@@ -52,6 +52,20 @@ Vector2 Vector2::operator*(float s){
     return new_v;
 }
 
+Vector2 Vector2::operator*(int s){
+    Vector2 new_v = Vector2();
+    new_v.x = this->x * s;
+    new_v.y = this->y * s;
+    return new_v;
+}
+
+Vector2 Vector2::operator*(double s){
+    Vector2 new_v = Vector2();
+    new_v.x = this->x * s;
+    new_v.y = this->y * s;
+    return new_v;
+}
+
 void Vector2::operator+=(const Vector2 &v){
     this->x+=v.x;
     this->y+=v.y;

@@ -9,6 +9,9 @@
 #include <iostream>
 #include <vector>
 #include "Hitbox.h"
+#include <tuple>
+
+using namespace std;
 
 class GameObject{
     public:
@@ -24,30 +27,32 @@ class GameObject{
         float getXPos();
         float getYPos();
         Vector2 getPos();
-        int getMask();
-        std::string getName();
+        string getName();
 
-        GameObject* isColliding(GameObject* other);
-        virtual void actOnCollision(GameObject* other);
-        virtual void handleEvents(SDL_Event e); // TODO this breaks player controls?
+        tuple<Hitbox*, Hitbox*> isColliding(GameObject* other);
+        virtual void actOnCollision(Hitbox* local_hitbox, Hitbox* other);
+        virtual void handleEvents(SDL_Event e);
+        void setPosition(Vector2 newPos);
 
         // Hitbox getters
         int getHitboxCount();
-        Hitbox getHitbox(int index);
+        Hitbox* getHitbox(int index);
 
         // Update and render
         virtual void update();
         virtual void render();
     protected:
         void _init(const char* textureSheet, SDL_Renderer* ren);
+        SDL_Renderer* _renderer;
         Vector2 _pos;
+        Vector2 _prevPos; // Previous position
         Vector2 _imageSize;
-        int _mask;
         SDL_Texture* _objTexture;
         SDL_Rect _srcRect, _destRect;
         SDL_Renderer* _ren;
-        std::vector<Hitbox*> _hitboxes; // Potential FIXME , might not be how to handle lists in this case
-        std::string _name;
+        vector<Hitbox*> _hitboxes; // Potential FIXME , might not be how to handle lists in this case
+        string _name;
+        void drawHitboxOutlines();
 };
 
 #endif /* GameObject_h */

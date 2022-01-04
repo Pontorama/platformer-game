@@ -42,7 +42,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         _gameObjects = std::vector<GameObject*>();
 
         _gameObjects.push_back(_player);
-        _gameObjects.push_back(new Platform("assets/images/Platform.png", _renderer, Vector2(200,20)));
+        _gameObjects.push_back(new Platform("assets/images/Platform.png", _renderer, Vector2(10,400)));
 
         cout << "Game objects initialized!" << endl;
     }
@@ -69,7 +69,9 @@ void Game::handleEvents(){
 }
 
 void Game::update(){
+    // Do collision detection
     checkForCollisions();
+    // Do other updates
     for(int i = 0; i< _gameObjects.size(); i++){
         _gameObjects[i]->update();
     }
@@ -77,6 +79,7 @@ void Game::update(){
 
 void Game::render(){
     // Clear old stuff that shouldn't be rendered
+    SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
     SDL_RenderClear(_renderer);
     // Add stuff to render here
     // The last thing painted is the foremost in the image
@@ -103,11 +106,13 @@ void Game::clean(){
 void Game::checkForCollisions(){
     for(int i = 0; i < _gameObjects.size(); i++){
         for(int j = i+1; j < _gameObjects.size(); j++){
-            GameObject* result = _gameObjects[i]->isColliding(_gameObjects[j]);
-            if(result != nullptr){
+            tuple<Hitbox*, Hitbox*> result = _gameObjects[i]->isColliding(_gameObjects[j]);
+            Hitbox* other_hitbox = get<0>(result);
+            Hitbox* this_hitbox = get<1>(result);
+            if(other_hitbox != nullptr && this_hitbox != nullptr){
                 // Act on collision
-                _gameObjects[i]->actOnCollision(result);
-                result->actOnCollision(_gameObjects[i]);
+                _gameObjects[i]->actOnCollision(this_hitbox, other_hitbox);
+                _gameObjects[j]->actOnCollision(other_hitbox, this_hitbox);
             }
         }
     }
@@ -115,4 +120,4 @@ void Game::checkForCollisions(){
 
 bool Game::running(){ 
     return _isRunning;
-    }
+}

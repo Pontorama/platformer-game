@@ -14,8 +14,10 @@ class Vector2{
         Vector2 operator+(const Vector2 &v);
         float operator*(const Vector2 &v);
         Vector2 operator*(float s);
+        Vector2 operator*(int s);
+        Vector2 operator*(double s);
         void operator+=(const Vector2 &v);
-        Vector2 operator%(const Vector2 &v);
+        Vector2 operator%(const Vector2 &v); // Elementwise multiplication
 
         float x;
         float y;
