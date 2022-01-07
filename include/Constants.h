@@ -19,6 +19,16 @@ const int DEFAULT_MASK = 0;
 const int TERRAIN_MASK = 1;
 const int PLAYER_MASK = 10;
 
+// Game object types for level loading
+const std::string PLATFORM_TYPE = "Platform";
+const std::string PLAYER_TYPE = "Player";
+const std::string HITBOX_TYPE = "Hitbox";
+
+
+// Paths
+const std::string ASSETS_PATH = "/home/pongu/Code/platformer-game/assets/";
+const std::string PLAYER_TEXTURE_PATH = ASSETS_PATH + "images/Dude.png";
+
 // Debug
 const int DEBUG_MODE = 1;
 

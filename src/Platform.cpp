@@ -5,6 +5,14 @@ Platform::Platform(const char* textureSheet,SDL_Renderer* ren, Vector2 pos) : Ga
     _hitboxes.push_back(hb); // Potential FIXME, hb might not need to be pointer?
 }
 
+Platform::Platform(const char* textureSheet,SDL_Renderer* ren, Vector2 pos, std::string name, int id) : GameObject(textureSheet, ren, pos){
+    Hitbox* hb = new Hitbox(_pos, _imageSize, TERRAIN_MASK);
+    _hitboxes.push_back(hb); // Potential FIXME, hb might not need to be pointer?
+    _name = name;
+    _id = id;
+}
+
+
 Platform::~Platform(){
     
 }

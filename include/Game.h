@@ -1,16 +1,19 @@
 #ifndef Game_h
 #define Game_h
 
-#include "SDL2/SDL.h"
 #include <stdio.h>
 #include <iostream>
+
 #include "SDL2/SDL_image.h"
+#include "SDL2/SDL.h"
+
 #include "Vector2.h"
 #include "Constants.h"
 #include "GameObject.h"
 #include "TextureManager.h"
 #include "Player.h"
 #include "Platform.h"
+#include "LevelLoader.h"
 
 class Game{
     public:
