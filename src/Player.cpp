@@ -11,9 +11,16 @@ Player::Player(){
 Player::Player(const char* textureSheet, SDL_Renderer* ren) : GameObject(textureSheet, ren){
     _speed = {0,0};
     _acceleration = 0.0005;
-
-
     _pos = {0,0};
+
+    Hitbox* hb = new Hitbox(_pos, _imageSize, PLAYER_MASK);
+    _hitboxes.push_back(hb);
+}
+
+Player::Player(const char* textureSheet, SDL_Renderer* ren, Vector2 position) : GameObject(textureSheet, ren){
+    _speed = {0,0};
+    _acceleration = 0.0005;
+    _pos = position;
 
     Hitbox* hb = new Hitbox(_pos, _imageSize, PLAYER_MASK);
     _hitboxes.push_back(hb);

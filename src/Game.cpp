@@ -37,14 +37,20 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         _isRunning = true;
 
         // Initialize gameobjects
-        _player = new Player("assets/images/Dude.png", _renderer);
 
-        _gameObjects = std::vector<GameObject*>();
+        // Initialize gameobjects
+        LevelLoader levelLoader(_renderer);
+        _gameObjects = levelLoader.loadLevelFromFile(ASSETS_PATH + "levels/Test.json");
+        cout << "Game objects initialized! Loaded " << _gameObjects.size() << " Objects!" << endl;
 
-        _gameObjects.push_back(_player);
-        _gameObjects.push_back(new Platform("assets/images/Platform.png", _renderer, Vector2(10,400)));
-
-        cout << "Game objects initialized!" << endl;
+        //_player = new Player("assets/images/Dude.png", _renderer);
+        //
+        //_gameObjects = std::vector<GameObject*>();
+        //
+        //_gameObjects.push_back(_player);
+        //_gameObjects.push_back(new Platform("assets/images/Platform.png", _renderer, Vector2(10,400)));
+        //
+        //cout << "Game objects initialized!" << endl;
     }
     else{
         cout << "SDL could not initialize!" << endl;
