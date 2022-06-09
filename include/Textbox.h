@@ -2,7 +2,7 @@
 #define Textbox_h
 
 #include "GameObject.h"
-#include "SDL2/SDL_ttf.h"
+#include <SDL2/SDL_ttf.h>
 #include <string>
 
 class Textbox : public GameObject {

@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include <iomanip>
-#include <json.hpp>
 #include <string>
 #include <fstream>
 
+#include "json.hpp"
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 

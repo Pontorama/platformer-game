@@ -26,7 +26,7 @@ const std::string HITBOX_TYPE = "Hitbox";
 
 
 // Paths
-const std::string ASSETS_PATH = "/home/pongu/Code/platformer-game/assets/";
+const std::string ASSETS_PATH = "/home/pongu/dev/platformer-game/assets/";
 const std::string PLAYER_TEXTURE_PATH = ASSETS_PATH + "images/Dude.png";
 
 // Debug

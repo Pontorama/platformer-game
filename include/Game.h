@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "Platform.h"
 #include "LevelLoader.h"
+#include "UIMaster.h"
 
 class Game{
     public:
@@ -36,6 +37,7 @@ class Game{
         SDL_Renderer* _renderer;
         Player* _player;
         std::vector<GameObject*> _gameObjects; // Potential FIXME , might not be how to handle lists in this case
+        UIMaster* _uimaster;
 };
 
 

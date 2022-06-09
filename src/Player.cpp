@@ -6,12 +6,14 @@ Player::Player(){
     _speed = {0,0};
     _acceleration = 0.0005;
     _pos = {0,0};
+    _jumpSpeed = 10;
 }
 
 Player::Player(const char* textureSheet, SDL_Renderer* ren) : GameObject(textureSheet, ren){
     _speed = {0,0};
     _acceleration = 0.0005;
     _pos = {0,0};
+    _jumpSpeed = 10;
 
     Hitbox* hb = new Hitbox(_pos, _imageSize, PLAYER_MASK);
     _hitboxes.push_back(hb);
@@ -21,6 +23,7 @@ Player::Player(const char* textureSheet, SDL_Renderer* ren, Vector2 position) : 
     _speed = {0,0};
     _acceleration = 0.0005;
     _pos = position;
+    _jumpSpeed = 10;
 
     Hitbox* hb = new Hitbox(_pos, _imageSize, PLAYER_MASK);
     _hitboxes.push_back(hb);
@@ -54,6 +57,9 @@ void Player::handleEvents(SDL_Event e){
             case SDLK_a:
                 // Move player left
                 _dir.x += -1;
+                break;
+            case SDLK_SPACE:
+                _doJump = true;
                 break;
             default:
                 break;
@@ -98,10 +104,18 @@ void Player::update(){
 void Player::move(){
     bool accelerating = std::abs(_dir.x) > 0;
 
-    // Update speed & position
-    Vector2 dSpeed = _dir * _acceleration * TIME_PER_FRAME; 
-
     _speed += _dir * _acceleration * TIME_PER_FRAME;
+
+    // gravity
+    if(!_onGround)
+        _speed.y += GRAVITY * TIME_PER_FRAME;
+
+    // jumping
+    if(_doJump && _onGround){
+        _speed.y -= _jumpSpeed;
+        _onGround = false;
+    }
+
     if(_speed.getLength() > PLAYER_MAX_SPEED){
         _speed = _speed * (PLAYER_MAX_SPEED / _speed.getLength());
     }
@@ -124,6 +138,9 @@ void Player::move(){
 
     _destRect.x = _pos.x;
     _destRect.y = _pos.y;
+
+    // reset jump
+    _doJump = false;
 }
 
 void Player::render(){
@@ -140,7 +157,7 @@ void Player::actOnCollision(Hitbox* local_hitbox, Hitbox* other){
 }
 
 void Player::terrainCollision(Hitbox* local, Hitbox* terrain){
-    // TODO implement relative position in case of movin terrain
+    // TODO: implement relative position in case of movin terrain
 
     // Calculate what side of the hitbox the player is colliding with
     // and stop the player from entering further into the box
@@ -172,6 +189,7 @@ void Player::terrainCollision(Hitbox* local, Hitbox* terrain){
        _speed.y = 0;
        float dy = tPos.y - (lPos.y + lSize.y);
        GameObject::setPosition(Vector2(_pos.x, _pos.y + dy));
+       _onGround = true;
 
     }else if((lPos.y < tPos.y + tSize.y) && (lPrevPos.y >= tPos.y + tSize.y)){
         // Collision occured at bottom of terrain

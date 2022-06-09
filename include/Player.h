@@ -24,8 +24,12 @@ class Player : public GameObject{
         void render();
     private:
         Vector2 _speed;
-        float _acceleration;
+        float _acceleration;  // TODO: Should no longer be a constant, use newtonian physics instead
         Vector2 _dir; // The direction the player is moving in, should be normalized
+        bool _onGround;
+        float _jumpSpeed;
+        bool _doJump;
+
         void setPosition(Vector2 newPos);
         const float MAX_DIR_LEN = 1.5;
         const float PLAYER_MAX_SPEED = 0.5;

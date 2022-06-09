@@ -37,25 +37,17 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         _isRunning = true;
 
         // Initialize gameobjects
-
-        // Initialize gameobjects
         LevelLoader levelLoader(_renderer);
         _gameObjects = levelLoader.loadLevelFromFile(ASSETS_PATH + "levels/Test.json");
         cout << "Game objects initialized! Loaded " << _gameObjects.size() << " Objects!" << endl;
-
-        //_player = new Player("assets/images/Dude.png", _renderer);
-        //
-        //_gameObjects = std::vector<GameObject*>();
-        //
-        //_gameObjects.push_back(_player);
-        //_gameObjects.push_back(new Platform("assets/images/Platform.png", _renderer, Vector2(10,400)));
-        //
-        //cout << "Game objects initialized!" << endl;
     }
     else{
         cout << "SDL could not initialize!" << endl;
         _isRunning = false;
     }
+
+    // Init UI
+    _uimaster = new UIMaster(_renderer);
 
 }
 
@@ -92,6 +84,8 @@ void Game::render(){
     for(int i = 0; i < _gameObjects.size(); i++){
         _gameObjects[i]->render();
     }
+    // Render UI elements last so they show up on top
+    _uimaster->renderAllElements();
     // ------------------------
     SDL_RenderPresent(_renderer);
 }
