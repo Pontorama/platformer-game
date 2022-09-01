@@ -19,19 +19,19 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
             flags = SDL_WINDOW_FULLSCREEN;
         }
 
-        std::cout << "SDL subsystems initialized successfully!" << std::endl;
+        cout << "SDL subsystems initialized successfully!" << endl;
 
         // Create window
         _window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
         if(_window){
-            std::cout << "Window created!" << std::endl;
+            cout << "Window created!" << endl;
         }
 
         // Create renderer
         _renderer = SDL_CreateRenderer(_window, -1, 0);
         if(_renderer){
             SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
-            std::cout << "Renderer Created!" << std::endl;
+            cout << "Renderer Created!" << endl;
         }
 
         _isRunning = true;
@@ -48,6 +48,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
     // Init UI
     _uimaster = new UIMaster(_renderer);
+    cout << "UI initialized!" << endl;
 
 }
 

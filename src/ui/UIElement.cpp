@@ -1,3 +1,7 @@
+/*
+    Base class for building more complex UI elements
+*/
+
 #include "UIElement.h"
 
 UIElement::UIElement(int ID, SDL_Renderer* renderer){

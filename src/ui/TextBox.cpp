@@ -4,6 +4,11 @@ TextBox::TextBox(int ID, SDL_Renderer* renderer) : UIElement(ID, renderer){
     _init();
 }
 
+TextBox::TextBox(int ID, SDL_Renderer* renderer, TTF_Font* font) : UIElement(ID, renderer){
+    _font = font;
+    _init();
+}
+
 TextBox::TextBox(int ID, SDL_Renderer* renderer, Vector2 pos, Vector2 size) : UIElement(ID, renderer){
     _pos = pos;
     _size = size;
@@ -36,7 +41,7 @@ string TextBox::getText(){
     return _text;
 }
 
-string TextBox::setText(string newText){
+void TextBox::setText(string newText){
     _text = newText;
 }
 

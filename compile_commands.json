@@ -1,0 +1,227 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/Debugger.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/Debugger.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/Game.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/Game.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/GameObject.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/GameObject.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/Hitbox.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/Hitbox.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/LevelLoader.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/LevelLoader.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/Platform.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/Platform.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/Player.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/Player.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/TextureManager.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/TextureManager.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/Vector2.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/Vector2.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/inpututils.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/inpututils.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/main.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/main.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/setup.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/setup.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/ui/TextBox.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/ui/TextBox.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/ui/UIElement.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/ui/UIElement.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-w",
+      "-Iinclude",
+      "-Ilib",
+      "-o",
+      "bin/main",
+      "src/ui/UIMaster.cpp"
+    ],
+    "directory": "/home/pongu/dev/platformer-game",
+    "file": "/home/pongu/dev/platformer-game/src/ui/UIMaster.cpp",
+    "output": "/home/pongu/dev/platformer-game/bin/main"
+  }
+]
