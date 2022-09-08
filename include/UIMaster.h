@@ -26,6 +26,7 @@ class UIMaster{
         void updateElement(int elementID, string action);
         void addElement(UIElement* elementToAdd);
         void removeElement(int elementID);
+        UIElement* getElement(int index);
 
     private:
         SDL_Renderer* _ren;

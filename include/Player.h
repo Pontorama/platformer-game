@@ -7,6 +7,7 @@
 #include "Hitbox.h"
 #include <iostream>
 #include <cmath>
+#include "DebugLogger.h"
 
 class Player : public GameObject{
     public:

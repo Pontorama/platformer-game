@@ -9,7 +9,6 @@
 #include "TextBox.h"
 #include "Constants.h"
 
-
 class DebugLogger : public TextBox{
     // TODO add list of logs
     public:
@@ -34,5 +33,9 @@ class DebugLogger : public TextBox{
         const int MAX_N_LINES = 5;
         SDL_Rect _borderBox;
 };
+
+namespace Debug{
+    extern DebugLogger* debugLogger;
+}
 
 #endif /* Debugger.h */

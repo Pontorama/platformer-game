@@ -34,5 +34,8 @@ void UIMaster::addElement(UIElement* elementToAdd){
 }
 
 void UIMaster::removeElement(int elementID){
+}
 
+UIElement* UIMaster::getElement(int index){
+    return _elements[index];
 }
