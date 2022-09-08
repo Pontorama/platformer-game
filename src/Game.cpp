@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "DebugLogger.h"
 
 using namespace std;
 
@@ -48,6 +49,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
     // Init UI
     _uimaster = new UIMaster(_renderer);
+    DebugLogger* debug = new DebugLogger(0, _renderer, TTF_OpenFont("fonts/DejaVuSansMono.ttf", 20));
+    _uimaster->addElement(debug);
+    // Set global pointer
+    Debug::debugLogger = (DebugLogger*)_uimaster->getElement(0);
     cout << "UI initialized!" << endl;
 
 }

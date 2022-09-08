@@ -36,14 +36,19 @@ void DebugLogger::render(){
     textBbox.x = _borderBox.x;
     textBbox.y = _borderBox.y;
 
+    int widest = 0; 
     for(int i = 0; i < _lines.size(); i++){
         surf = TTF_RenderText_Solid(_font, _lines[i].c_str(), _color);
         textTexture = SDL_CreateTextureFromSurface(_ren, surf);
         TTF_SizeText(_font, _lines[i].c_str(), &textBbox.w, nullptr);
+        if(textBbox.w > widest){
+            widest = textBbox.w;
+        }
         SDL_RenderCopy(_ren, textTexture, NULL, &textBbox);
         textBbox.y += _fontSize;
     }
-    
+    _borderBox.w = widest; 
+
     SDL_SetRenderDrawBlendMode(_ren, SDL_BLENDMODE_BLEND);
     // Draw transparent background
     SDL_SetRenderDrawColor(_ren, _backgroundColor.r, _backgroundColor.g, _backgroundColor.b, _backgroundColor.a);
@@ -61,3 +66,5 @@ void DebugLogger::log(string logText){
         _lines.erase(_lines.begin());
     }
 }
+
+DebugLogger* Debug::debugLogger = nullptr;
