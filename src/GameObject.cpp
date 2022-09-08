@@ -21,7 +21,7 @@ void GameObject::_init(const char* textureSheet, SDL_Renderer* ren){
     int w, h;
 
     SDL_QueryTexture(_objTexture, NULL, NULL, &w, &h);
-    _imageSize = {w,h};
+    _imageSize = {(float)w, (float)h};
     _imageSize.x *= SCALE_FACTOR_X;
     _imageSize.y *= SCALE_FACTOR_Y;
     _srcRect = {0, 0, w, h};
@@ -133,5 +133,38 @@ void GameObject::setPosition(Vector2 newPos){
     }
     
     _pos = newPos;
+
+}
+
+/*!
+    Set the list of nearby hitboxes to be checked for collisions with
+*/
+void GameObject::setNearbyHitboxes(vector<Hitbox*> hitboxes){
+    _nearbyHitboxes.clear();
+    // Copy list
+    for(int i = 0; i < hitboxes.size(); i++){
+        _nearbyHitboxes.push_back(hitboxes[i]);
+    }
+}
+
+void GameObject::addNearbyHitboxes(vector<Hitbox*> hitboxes){
+    for(int i = 0; i < hitboxes.size(); i++){
+        _nearbyHitboxes.push_back(hitboxes[i]);
+    }
+}
+
+void GameObject::clearNearbyHitboxes(){
+    _nearbyHitboxes.clear();
+}
+
+vector<Hitbox*> GameObject::getHitboxes(){
+    vector<Hitbox*> out = _hitboxes;
+    return out;
+}
+
+/*!
+ * Virtual function. Wrapper for collision detection.
+ * */
+void GameObject::detectCollisions(){
 
 }

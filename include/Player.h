@@ -18,10 +18,11 @@ class Player : public GameObject{
         Vector2 getSpeed();
         
         void handleEvents(SDL_Event e);
-        void actOnCollision(Hitbox* local_hitbox, Hitbox* other);
         void update();
+        void handleCollision(Hitbox* local, Hitbox* other);
         void move();
         void render();
+        void detectCollisions();
     private:
         Vector2 _speed;
         float _acceleration;  // TODO: Should no longer be a constant, use newtonian physics instead
@@ -29,7 +30,6 @@ class Player : public GameObject{
         bool _onGround;
         float _jumpSpeed;
         bool _doJump;
-
         void setPosition(Vector2 newPos);
         const float MAX_DIR_LEN = 1.5;
         const float PLAYER_MAX_SPEED = 0.5;

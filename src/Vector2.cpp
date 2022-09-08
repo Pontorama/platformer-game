@@ -1,5 +1,7 @@
 #include "Vector2.h"
 
+using namespace Vector;
+
 Vector2::Vector2(){
     this->x = 0;
     this->y = 0;
@@ -78,4 +80,11 @@ std::string Vector2::toString(){
 Vector2 Vector2::operator%(const Vector2 &v){
     // Elementwise multiplication
     return Vector2(this->x * v.x, this->y * v.y);
+}
+
+/*!
+    Get distance between two points, represented as vectors
+*/
+float Vector::getDistance(Vector2 v1, Vector2 v2){
+    return sqrt((v1.x - v2.x)*(v1.x - v2.x) + (v1.y - v2.y)*(v1.y - v2.y));
 }

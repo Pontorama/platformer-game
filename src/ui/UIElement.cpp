@@ -4,6 +4,8 @@
 
 #include "UIElement.h"
 
+using namespace Vector;
+
 UIElement::UIElement(int ID, SDL_Renderer* renderer){
     _ID = ID;
     _ren = renderer;

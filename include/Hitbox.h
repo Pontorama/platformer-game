@@ -4,6 +4,8 @@
 #include "Vector2.h"
 #include "Constants.h"
 
+using namespace Vector;
+
 class Hitbox{
     public:
         Hitbox();

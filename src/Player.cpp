@@ -13,7 +13,7 @@ Player::Player(const char* textureSheet, SDL_Renderer* ren) : GameObject(texture
     _speed = {0,0};
     _acceleration = 0.0005;
     _pos = {0,0};
-    _jumpSpeed = 10;
+    _jumpSpeed = 500;
 
     Hitbox* hb = new Hitbox(_pos, _imageSize, PLAYER_MASK);
     _hitboxes.push_back(hb);
@@ -30,13 +30,18 @@ Player::Player(const char* textureSheet, SDL_Renderer* ren, Vector2 position) : 
 }
 
 Player::~Player(){
-
+    for(int i = 0; i<_hitboxes.size(); i++){
+        delete _hitboxes[i];
+    }
 }
 
 Vector2 Player::getSpeed(){
     return _speed;
 }
 
+/*!
+    Handle player input to the player object
+*/
 void Player::handleEvents(SDL_Event e){
     // Handle player controls
     if(e.type == SDL_KEYDOWN){
@@ -95,26 +100,20 @@ void Player::handleEvents(SDL_Event e){
 }
 
 void Player::update(){
+    detectCollisions();
     move();
     // Parent update function
     GameObject::update();
-    
 }
 
+/*!
+    Move the player
+    Handles running and jumping
+*/
 void Player::move(){
     bool accelerating = std::abs(_dir.x) > 0;
 
     _speed += _dir * _acceleration * TIME_PER_FRAME;
-
-    // gravity
-    if(!_onGround)
-        _speed.y += GRAVITY * TIME_PER_FRAME;
-
-    // jumping
-    if(_doJump && _onGround){
-        _speed.y -= _jumpSpeed;
-        _onGround = false;
-    }
 
     if(_speed.getLength() > PLAYER_MAX_SPEED){
         _speed = _speed * (PLAYER_MAX_SPEED / _speed.getLength());
@@ -123,6 +122,15 @@ void Player::move(){
     if(!accelerating) // Only deccelerate if not accelerating
         _speed += _speed * (-1*_speed.getLength()*_speed.getLength() * PLAYER_SLOWDOWN_ACC * TIME_PER_FRAME);
 
+    // gravity
+    if(!_onGround){
+        _speed.y += GRAVITY * TIME_PER_FRAME;
+    }
+
+    // jumping
+    if(_doJump && _onGround){
+        _speed.y -= _jumpSpeed;
+    }
 
     // Stop player completely if speed is low enough
     if(std::abs(_speed.x) <= PLAYER_MIN_SPEED && !accelerating)
@@ -138,24 +146,22 @@ void Player::move(){
 
     _destRect.x = _pos.x;
     _destRect.y = _pos.y;
-
     // reset jump
-    _doJump = false;
+    _doJump = false;    
+    // Reset onGround flag
+    _onGround = false;
 }
 
+/*!
+    Render the player to the screen
+*/
 void Player::render(){
     GameObject::render();
 }
 
-void Player::actOnCollision(Hitbox* local_hitbox, Hitbox* other){
-    // This function should be called upon collision with another hitbox
-    // other is a pointer to the object the player colliding with
-    if(other->getMask() == TERRAIN_MASK){
-        // Colliding with terrain
-        terrainCollision(local_hitbox, other);
-    }
-}
-
+/*!
+    Handle collisions with terrain layer
+*/
 void Player::terrainCollision(Hitbox* local, Hitbox* terrain){
     // TODO: implement relative position in case of movin terrain
 
@@ -170,32 +176,63 @@ void Player::terrainCollision(Hitbox* local, Hitbox* terrain){
     Vector2 tPos = terrain->getPos();
     Vector2 tSize = terrain->getSize();
 
+    float dx = 0;
+    float dy = 0;
+
     // Use previous positions to decide wether collision happened in x-direction or y-direction
     if((lPos.x + lSize.x > tPos.x) && (lPrevPos.x +lSize.x <= tPos.x)){
         // Collision occured to the left of the terrain
         _speed.x = 0;
-        float dx = tPos.x - (lPos.x + lSize.x);
-        GameObject::setPosition(Vector2(_pos.x + dx, _pos.y));
+        dx = tPos.x - (lPos.x + lSize.x);
 
     }else if((lPos.x < tPos.x + tSize.x) && (lPrevPos.x >= tPos.x + tSize.x)){
         // Collision occured to the right of the terrain
         _speed.x = 0;
-        float dx = tPos.x + tSize.x - lPos.x;
-        GameObject::setPosition(Vector2(_pos.x + dx, _pos.y));
+        dx = tPos.x + tSize.x - lPos.x;
     }
 
     if((lPos.y + lSize.y > tPos.y) && (lPrevPos.y + lSize.y <= tPos.y)){
        // Collision occured at top of terrain
        _speed.y = 0;
-       float dy = tPos.y - (lPos.y + lSize.y);
-       GameObject::setPosition(Vector2(_pos.x, _pos.y + dy));
+       dy = tPos.y - (lPos.y + lSize.y);
        _onGround = true;
 
     }else if((lPos.y < tPos.y + tSize.y) && (lPrevPos.y >= tPos.y + tSize.y)){
         // Collision occured at bottom of terrain
         _speed.y = 0;
-        float dy = tPos.y + tSize.y - lPos.y;
-        GameObject::setPosition(Vector2(_pos.x, _pos.y + dy));
+        dy = tPos.y + tSize.y - lPos.y;
     }
+
+    GameObject::setPosition(Vector2(_pos.x + dx, _pos.y + dy));
     
+}
+
+/* !
+ * Check nearby hitboxes (passed from Game) for overlap
+ * If overlap, pass hitbox to collision handling
+ * */
+void Player::detectCollisions(){
+    for(int i = 0; i < _hitboxes.size(); i++){
+        for(int j = 0; j < _nearbyHitboxes.size(); j++){
+            if(_hitboxes[i]->overlaps(_nearbyHitboxes[j])){
+               handleCollision(_hitboxes[i], _nearbyHitboxes[j]); 
+            }
+        } 
+    }
+}
+
+
+/*!
+ * Wrapper for collision handling,
+ * Act on collisions based on layer
+ * */
+void Player::handleCollision(Hitbox* local, Hitbox* other){
+    switch(other->getMask()){
+        case TERRAIN_MASK:
+            terrainCollision(local, other);
+            break;
+
+        default:
+            break;
+    }
 }

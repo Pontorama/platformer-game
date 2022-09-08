@@ -1,5 +1,7 @@
 #include "TextBox.h"
 
+using namespace Vector;
+
 TextBox::TextBox(int ID, SDL_Renderer* renderer) : UIElement(ID, renderer){
     _init();
 }

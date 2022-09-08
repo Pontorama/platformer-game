@@ -12,6 +12,7 @@
 #include <tuple>
 
 using namespace std;
+using namespace Vector;
 
 class GameObject{
     public:
@@ -37,10 +38,16 @@ class GameObject{
         // Hitbox getters
         int getHitboxCount();
         Hitbox* getHitbox(int index);
+        vector<Hitbox*> getHitboxes();
 
-        // Update and render
+        // Update and render, collision detection
         virtual void update();
         virtual void render();
+        void setNearbyHitboxes(vector<Hitbox*> hitboxes);
+        void addNearbyHitboxes(vector<Hitbox*> hitboxes);
+        void clearNearbyHitboxes();
+        virtual void detectCollisions();
+
     protected:
         void _init(const char* textureSheet, SDL_Renderer* ren);
         SDL_Renderer* _renderer;
@@ -54,6 +61,7 @@ class GameObject{
         string _name;
         int _id;
         void drawHitboxOutlines();
+        vector<Hitbox*> _nearbyHitboxes;
 };
 
 #endif /* GameObject_h */

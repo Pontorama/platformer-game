@@ -7,6 +7,7 @@
 #include "SDL2/SDL_render.h"
 
 using namespace std;
+using namespace Vector;
 
 class UIElement{
     // Container for UI elements (text/images/etc)

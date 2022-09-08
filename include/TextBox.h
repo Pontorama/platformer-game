@@ -8,6 +8,8 @@
 
 #include "UIElement.h"
 
+using namespace Vector;
+
 class TextBox : public UIElement{
     public:
         TextBox(int ID, SDL_Renderer* renderer);

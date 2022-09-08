@@ -28,7 +28,7 @@ class Game{
         void render(); // Render gameobjects & other things to screen
         void clean();
         void checkForCollisions();
-
+        void hitboxProximityUpdate();
         bool running();
 
     private:
@@ -38,6 +38,7 @@ class Game{
         Player* _player;
         std::vector<GameObject*> _gameObjects; // Potential FIXME , might not be how to handle lists in this case
         UIMaster* _uimaster;
+        const float HITBOX_SCAN_RADIUS = 10; // FIXME: Test for good value
 };
 
 

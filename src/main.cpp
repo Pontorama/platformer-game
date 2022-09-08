@@ -7,7 +7,7 @@ Game* game = nullptr;
 int main(int argc, char* args[]){
 
     // Set FPS so game doesn't run based on processor clock speed
-    const float frameDelay = 1000 / FRAMERATE;
+    const float frameDelay = 1000 / (FRAMERATE*1.f);
 
     Uint32 framestart;
     int frametime;

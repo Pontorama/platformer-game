@@ -68,9 +68,7 @@ void Game::handleEvents(){
 }
 
 void Game::update(){
-    // Do collision detection
-    checkForCollisions();
-    // Do other updates
+    hitboxProximityUpdate();
     for(int i = 0; i< _gameObjects.size(); i++){
         _gameObjects[i]->update();
     }
@@ -121,4 +119,21 @@ void Game::checkForCollisions(){
 
 bool Game::running(){ 
     return _isRunning;
+}
+
+/*!
+    Update the list of nearby hitboxes for all gameobjects
+*/
+void Game::hitboxProximityUpdate(){
+    for(int i = 0; i < _gameObjects.size(); i++){
+        _gameObjects[i]->clearNearbyHitboxes();
+        for(int j = 0; j < _gameObjects.size(); j++){
+            // Check if gameobjects are close to each other
+            if(Vector::getDistance(_gameObjects[i]->getPos(), _gameObjects[j]->getPos()) < HITBOX_SCAN_RADIUS){
+                if(i != j){
+                    _gameObjects[i]->addNearbyHitboxes(_gameObjects[j]->getHitboxes());
+                }
+            }
+        }
+    }
 }
