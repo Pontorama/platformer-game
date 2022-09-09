@@ -33,6 +33,7 @@ class GameObject{
         tuple<Hitbox*, Hitbox*> isColliding(GameObject* other);
         virtual void actOnCollision(Hitbox* local_hitbox, Hitbox* other);
         virtual void handleEvents(SDL_Event e);
+        virtual void handleInput(const uint8_t* state);
         void setPosition(Vector2 newPos);
 
         // Hitbox getters

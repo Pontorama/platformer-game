@@ -76,6 +76,18 @@ void Game::handleEvents(){
     }
 }
 
+/*!
+ * Handle keyboard input for player etc.
+ * */
+void Game::handleInput(){
+    SDL_PumpEvents();
+    const uint8_t* state = SDL_GetKeyboardState(nullptr);
+    // Send inputs to game objects
+    for(int i = 0; i < _gameObjects.size(); i++){
+       _gameObjects[i]->handleInput(state); 
+    }
+}
+
 void Game::update(){
     hitboxProximityUpdate();
     for(int i = 0; i< _gameObjects.size(); i++){
