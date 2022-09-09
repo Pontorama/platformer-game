@@ -86,6 +86,10 @@ void GameObject::actOnCollision(Hitbox* local_hitbox, Hitbox* other){
     // Local hitbox is the hitbox belonging to this gameobject, other is hitbox belonging to other gameobject
 }
 
+void GameObject::handleInput(const uint8_t* state){
+
+}
+
 void GameObject::handleEvents(SDL_Event e){
     
 }

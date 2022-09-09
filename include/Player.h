@@ -19,6 +19,7 @@ class Player : public GameObject{
         Vector2 getSpeed();
         
         void handleEvents(SDL_Event e);
+        void handleInput(const uint8_t* state);
         void update();
         void handleCollision(Hitbox* local, Hitbox* other);
         void move();

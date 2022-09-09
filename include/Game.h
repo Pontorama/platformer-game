@@ -24,6 +24,7 @@ class Game{
         void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen); // Function to initialize the game window
 
         void handleEvents(); // Input, other window events etc
+        void handleInput();
         void update(); // Update all gameobjects
         void render(); // Render gameobjects & other things to screen
         void clean();
