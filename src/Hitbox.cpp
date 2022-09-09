@@ -23,7 +23,20 @@ Hitbox::Hitbox(Vector2 pos, Vector2 size, int mask){
 bool Hitbox::overlaps(Hitbox* other){
     Vector2 otherPos = other->getPos();
     Vector2 otherSize = other->getSize();
-    return !((otherPos.x + otherSize.x < _pos.x) || (otherPos.x > _pos.x+_size.x)) && !((otherPos.y > _pos.y+_size.y) || (otherPos.y + otherSize.y < _pos.y));
+
+    // Check if axis overlaps one at a time
+    // If overlap on both axis, collision occured
+    bool xOverlap = false;
+    bool yOverlap = false;
+
+    if(otherPos.x + otherSize.x > _pos.x && otherPos.x < _pos.x + _size.x){
+        xOverlap = true;
+    }
+
+    if(otherPos.y + otherSize.y > _pos.y && otherPos.y < _pos.y + _size.y){
+        yOverlap = true;
+    }
+    return xOverlap && yOverlap;
 }
 
 void Hitbox::move(Vector2 v){
@@ -57,3 +70,4 @@ int Hitbox::getMask(){
 void Hitbox::setMask(int newMask){
     _mask = newMask;
 }
+

@@ -12,6 +12,7 @@
 #include <tuple>
 
 using namespace std;
+using namespace Vector;
 
 class GameObject{
     public:
@@ -37,10 +38,16 @@ class GameObject{
         // Hitbox getters
         int getHitboxCount();
         Hitbox* getHitbox(int index);
+        vector<Hitbox*> getHitboxes();
 
-        // Update and render
+        // Update and render, collision detection
         virtual void update();
         virtual void render();
+        void setNearbyHitboxes(vector<Hitbox*> hitboxes);
+        void addNearbyHitboxes(vector<Hitbox*> hitboxes);
+        void clearNearbyHitboxes();
+        virtual void detectCollisions();
+
     protected:
         void _init(const char* textureSheet, SDL_Renderer* ren);
         SDL_Renderer* _renderer;
@@ -53,7 +60,9 @@ class GameObject{
         vector<Hitbox*> _hitboxes; // Potential FIXME , might not be how to handle lists in this case
         string _name;
         int _id;
-        void drawHitboxOutlines();
+        void drawAllHitboxOutlines();
+        void drawHitboxOutline(Hitbox* hb, SDL_Color c);
+        vector<Hitbox*> _nearbyHitboxes;
 };
 
 #endif /* GameObject_h */

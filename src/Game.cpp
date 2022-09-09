@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "DebugLogger.h"
 
 using namespace std;
 
@@ -6,6 +7,9 @@ Game::Game(){
 }
 
 Game::~Game(){
+    delete Debug::debugLogger;
+    delete _debug;
+    delete _uimaster;
 }
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen){
@@ -19,19 +23,19 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
             flags = SDL_WINDOW_FULLSCREEN;
         }
 
-        std::cout << "SDL subsystems initialized successfully!" << std::endl;
+        cout << "SDL subsystems initialized successfully!" << endl;
 
         // Create window
         _window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
         if(_window){
-            std::cout << "Window created!" << std::endl;
+            cout << "Window created!" << endl;
         }
 
         // Create renderer
         _renderer = SDL_CreateRenderer(_window, -1, 0);
         if(_renderer){
             SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
-            std::cout << "Renderer Created!" << std::endl;
+            cout << "Renderer Created!" << endl;
         }
 
         _isRunning = true;
@@ -48,28 +52,32 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
     // Init UI
     _uimaster = new UIMaster(_renderer);
+    _debug = new DebugLogger(0, _renderer, TTF_OpenFont("fonts/DejaVuSansMono.ttf", 20));
+    _uimaster->addElement(_debug);
+    // Set global pointer
+    Debug::debugLogger = (DebugLogger*)_uimaster->getElement(0);
+    cout << "UI initialized!" << endl;
 
 }
 
 void Game::handleEvents(){
     SDL_Event event;
-    SDL_PollEvent(&event);
-    switch(event.type){
-        case SDL_QUIT:
-            _isRunning = false;
-            break;
-        default:
-            for(int i = 0; i < _gameObjects.size(); i++){
-                _gameObjects[i]->handleEvents(event);
-            }
-            break;
+    while(SDL_PollEvent(&event)){
+        switch(event.type){
+            case SDL_QUIT:
+                _isRunning = false;
+                break;
+            default:
+                for(int i = 0; i < _gameObjects.size(); i++){
+                   _gameObjects[i]->handleEvents(event);
+                }
+                break;
+        }
     }
 }
 
 void Game::update(){
-    // Do collision detection
-    checkForCollisions();
-    // Do other updates
+    hitboxProximityUpdate();
     for(int i = 0; i< _gameObjects.size(); i++){
         _gameObjects[i]->update();
     }
@@ -120,4 +128,21 @@ void Game::checkForCollisions(){
 
 bool Game::running(){ 
     return _isRunning;
+}
+
+/*!
+    Update the list of nearby hitboxes for all gameobjects
+*/
+void Game::hitboxProximityUpdate(){
+    for(int i = 0; i < _gameObjects.size(); i++){
+        _gameObjects[i]->clearNearbyHitboxes();
+        for(int j = 0; j < _gameObjects.size(); j++){
+            // Check if gameobjects are close to each other
+            if(Vector::getDistance(_gameObjects[i]->getPos(), _gameObjects[j]->getPos()) < HITBOX_SCAN_RADIUS){
+                if(i != j){
+                    _gameObjects[i]->addNearbyHitboxes(_gameObjects[j]->getHitboxes());
+                }
+            }
+        }
+    }
 }

@@ -21,7 +21,7 @@ void GameObject::_init(const char* textureSheet, SDL_Renderer* ren){
     int w, h;
 
     SDL_QueryTexture(_objTexture, NULL, NULL, &w, &h);
-    _imageSize = {w,h};
+    _imageSize = {(float)w, (float)h};
     _imageSize.x *= SCALE_FACTOR_X;
     _imageSize.y *= SCALE_FACTOR_Y;
     _srcRect = {0, 0, w, h};
@@ -51,7 +51,7 @@ void GameObject::update(){
 void GameObject::render(){
     SDL_RenderCopy(_ren, _objTexture, &_srcRect, &_destRect);
     if(DEBUG_MODE){
-        drawHitboxOutlines();
+        drawAllHitboxOutlines();
     }
 }
 
@@ -102,23 +102,30 @@ string GameObject::getName(){
     return _name;
 }
 
-void GameObject::drawHitboxOutlines(){
-    // Set color to red
-    SDL_SetRenderDrawColor(_renderer, 234, 19, 27, 255);
+void GameObject::drawHitboxOutline(Hitbox* hb, SDL_Color c){
+    // Set color
+    SDL_SetRenderDrawColor(_renderer, c.r, c.g, c.b, c.a);
+    // Draw lines
+    Vector2 pos = hb->getPos();
+    Vector2 size = hb->getSize();
+    // Draw X-lines
+    for(int u = (int)pos.x; u < (int)(pos.x + size.x); u++){
+        SDL_RenderDrawPoint(_renderer, u, (int)pos.y);
+        SDL_RenderDrawPoint(_renderer, u, (int)(pos.y + size.y));
+    }
+    // Draw Y-lines
+    for(int v = (int)pos.y; v < (int)(pos.y + size.y); v++){
+        SDL_RenderDrawPoint(_renderer, (int)pos.x, v);
+        SDL_RenderDrawPoint(_renderer, (int)(pos.x + size.x), v);
+    }
+}
+
+void GameObject::drawAllHitboxOutlines(){
+    // Set color to red by default
+    SDL_Color red = {234, 19, 27, 255};
     // Draw lines
     for(int i = 0; i < this->getHitboxCount(); i++){
-        Vector2 pos = _hitboxes[i]->getPos();
-        Vector2 size = _hitboxes[i]->getSize();
-        // Draw X-lines
-        for(int u = (int)pos.x; u < (int)(pos.x + size.x); u++){
-            SDL_RenderDrawPoint(_renderer, u, (int)pos.y);
-            SDL_RenderDrawPoint(_renderer, u, (int)(pos.y + size.y));
-        }
-        // Draw Y-lines
-        for(int v = (int)pos.y; v < (int)(pos.y + size.y); v++){
-            SDL_RenderDrawPoint(_renderer, (int)pos.x, v);
-            SDL_RenderDrawPoint(_renderer, (int)(pos.x + size.x), v);
-        }
+        drawHitboxOutline(_hitboxes[i], red);
     }
 }
 
@@ -133,5 +140,38 @@ void GameObject::setPosition(Vector2 newPos){
     }
     
     _pos = newPos;
+
+}
+
+/*!
+    Set the list of nearby hitboxes to be checked for collisions with
+*/
+void GameObject::setNearbyHitboxes(vector<Hitbox*> hitboxes){
+    _nearbyHitboxes.clear();
+    // Copy list
+    for(int i = 0; i < hitboxes.size(); i++){
+        _nearbyHitboxes.push_back(hitboxes[i]);
+    }
+}
+
+void GameObject::addNearbyHitboxes(vector<Hitbox*> hitboxes){
+    for(int i = 0; i < hitboxes.size(); i++){
+        _nearbyHitboxes.push_back(hitboxes[i]);
+    }
+}
+
+void GameObject::clearNearbyHitboxes(){
+    _nearbyHitboxes.clear();
+}
+
+vector<Hitbox*> GameObject::getHitboxes(){
+    vector<Hitbox*> out = _hitboxes;
+    return out;
+}
+
+/*!
+ * Virtual function. Wrapper for collision detection.
+ * */
+void GameObject::detectCollisions(){
 
 }

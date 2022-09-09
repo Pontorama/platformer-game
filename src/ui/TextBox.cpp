@@ -1,6 +1,13 @@
 #include "TextBox.h"
 
+using namespace Vector;
+
 TextBox::TextBox(int ID, SDL_Renderer* renderer) : UIElement(ID, renderer){
+    _init();
+}
+
+TextBox::TextBox(int ID, SDL_Renderer* renderer, TTF_Font* font) : UIElement(ID, renderer){
+    _font = font;
     _init();
 }
 
@@ -36,7 +43,7 @@ string TextBox::getText(){
     return _text;
 }
 
-string TextBox::setText(string newText){
+void TextBox::setText(string newText){
     _text = newText;
 }
 

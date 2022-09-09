@@ -1,4 +1,10 @@
+/*
+    Base class for building more complex UI elements
+*/
+
 #include "UIElement.h"
+
+using namespace Vector;
 
 UIElement::UIElement(int ID, SDL_Renderer* renderer){
     _ID = ID;

@@ -4,6 +4,8 @@
 #include <math.h>
 #include <string>
 
+namespace Vector{
+
 class Vector2{
     public:
         Vector2();
@@ -27,4 +29,7 @@ class Vector2{
         std::string toString();
 };
 
+float getDistance(Vector2 v1, Vector2 v2);
+
+}
 #endif
