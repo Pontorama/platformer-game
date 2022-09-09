@@ -17,6 +17,7 @@ const float SMALL_DIST = 0.01;
 // Masks
 const int DEFAULT_MASK = 0;
 const int TERRAIN_MASK = 1;
+const int INVISIBLE_MASK = 2; // For non-colliding objects
 const int PLAYER_MASK = 10;
 
 // Game object types for level loading

@@ -3,6 +3,7 @@
 
 #include "Vector2.h"
 #include "Constants.h"
+#include "SDL2/SDL.h"
 
 using namespace Vector;
 

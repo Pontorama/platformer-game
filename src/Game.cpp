@@ -7,6 +7,9 @@ Game::Game(){
 }
 
 Game::~Game(){
+    delete Debug::debugLogger;
+    delete _debug;
+    delete _uimaster;
 }
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen){
@@ -49,8 +52,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
     // Init UI
     _uimaster = new UIMaster(_renderer);
-    DebugLogger* debug = new DebugLogger(0, _renderer, TTF_OpenFont("fonts/DejaVuSansMono.ttf", 20));
-    _uimaster->addElement(debug);
+    _debug = new DebugLogger(0, _renderer, TTF_OpenFont("fonts/DejaVuSansMono.ttf", 20));
+    _uimaster->addElement(_debug);
     // Set global pointer
     Debug::debugLogger = (DebugLogger*)_uimaster->getElement(0);
     cout << "UI initialized!" << endl;
@@ -59,16 +62,17 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 void Game::handleEvents(){
     SDL_Event event;
-    SDL_PollEvent(&event);
-    switch(event.type){
-        case SDL_QUIT:
-            _isRunning = false;
-            break;
-        default:
-            for(int i = 0; i < _gameObjects.size(); i++){
-                _gameObjects[i]->handleEvents(event);
-            }
-            break;
+    while(SDL_PollEvent(&event)){
+        switch(event.type){
+            case SDL_QUIT:
+                _isRunning = false;
+                break;
+            default:
+                for(int i = 0; i < _gameObjects.size(); i++){
+                   _gameObjects[i]->handleEvents(event);
+                }
+                break;
+        }
     }
 }
 

@@ -29,11 +29,11 @@ bool Hitbox::overlaps(Hitbox* other){
     bool xOverlap = false;
     bool yOverlap = false;
 
-    if(otherPos.x + otherSize.x < _pos.x || otherPos.x < _pos.x + _size.x){
+    if(otherPos.x + otherSize.x > _pos.x && otherPos.x < _pos.x + _size.x){
         xOverlap = true;
     }
 
-    if(otherPos.y + otherSize.y > _pos.y || otherPos.y < _pos.y + _size.y){
+    if(otherPos.y + otherSize.y > _pos.y && otherPos.y < _pos.y + _size.y){
         yOverlap = true;
     }
     return xOverlap && yOverlap;
@@ -70,3 +70,4 @@ int Hitbox::getMask(){
 void Hitbox::setMask(int newMask){
     _mask = newMask;
 }
+

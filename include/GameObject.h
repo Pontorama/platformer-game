@@ -60,7 +60,8 @@ class GameObject{
         vector<Hitbox*> _hitboxes; // Potential FIXME , might not be how to handle lists in this case
         string _name;
         int _id;
-        void drawHitboxOutlines();
+        void drawAllHitboxOutlines();
+        void drawHitboxOutline(Hitbox* hb, SDL_Color c);
         vector<Hitbox*> _nearbyHitboxes;
 };
 

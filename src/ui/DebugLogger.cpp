@@ -67,4 +67,4 @@ void DebugLogger::log(string logText){
     }
 }
 
-DebugLogger* Debug::debugLogger = nullptr;
+DebugLogger* Debug::debugLogger;
