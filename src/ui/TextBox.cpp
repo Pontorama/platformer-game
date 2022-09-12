@@ -62,6 +62,9 @@ void TextBox::render(){
     bbox.h = _size.y;
 
     SDL_RenderCopy(_ren, texture, NULL, &bbox);
+    // Free memory
+    SDL_FreeSurface(surf);
+    SDL_DestroyTexture(texture);
 }
 
 void TextBox::update(){

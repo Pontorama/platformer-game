@@ -24,7 +24,6 @@ class Player : public GameObject{
         void handleCollision(Hitbox* local, Hitbox* other);
         void move();
         void draw();
-        void render();
         void detectCollisions();
     private:
         Vector2 _speed;

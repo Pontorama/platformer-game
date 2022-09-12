@@ -20,7 +20,7 @@ class UIMaster{
     // Master for all UI elements in a scene, renders everything
     public:
         UIMaster(SDL_Renderer* renderer);
-        virtual ~UIMaster();
+        ~UIMaster();
 
         void renderAllElements();
         void updateElement(int elementID, string action);

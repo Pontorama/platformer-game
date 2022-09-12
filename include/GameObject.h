@@ -6,6 +6,7 @@
 #include "Vector2.h"
 #include "Constants.h"
 #include "TextureManager.h"
+#include "RenderUtils.h"
 #include <iostream>
 #include <vector>
 #include "Hitbox.h"
@@ -13,6 +14,7 @@
 
 using namespace std;
 using namespace Vector;
+using RenderInfo = RenderUtils::RenderInfo;
 
 class GameObject{
     public:
@@ -29,6 +31,10 @@ class GameObject{
         float getYPos();
         Vector2 getPos();
         string getName();
+        SDL_Texture* getTexture();
+        SDL_Rect* getSrcRect();
+        SDL_Rect* getDestRect();
+        RenderInfo getRenderInfo();
 
         tuple<Hitbox*, Hitbox*> isColliding(GameObject* other);
         virtual void actOnCollision(Hitbox* local_hitbox, Hitbox* other);
@@ -43,7 +49,6 @@ class GameObject{
 
         // Update and render, collision detection
         virtual void update();
-        virtual void render();
         void setNearbyHitboxes(vector<Hitbox*> hitboxes);
         void addNearbyHitboxes(vector<Hitbox*> hitboxes);
         void clearNearbyHitboxes();

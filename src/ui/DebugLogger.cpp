@@ -46,6 +46,9 @@ void DebugLogger::render(){
         }
         SDL_RenderCopy(_ren, textTexture, NULL, &textBbox);
         textBbox.y += _fontSize;
+        // Free memory
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(textTexture);
     }
     _borderBox.w = widest; 
 

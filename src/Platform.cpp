@@ -14,11 +14,8 @@ Platform::Platform(const char* textureSheet,SDL_Renderer* ren, Vector2 pos, std:
 
 
 Platform::~Platform(){
-    
-}
-
-void Platform::render(){
-    GameObject::render();
+    // Run parent class destructor
+    GameObject::~GameObject();
 }
 
 void Platform::update(){

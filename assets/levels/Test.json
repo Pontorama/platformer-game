@@ -3,15 +3,7 @@
     "type":"Platform",
     "name": "Platform1",
     "position": {"x":10, "y":400},
-    "TexturePath": "assets/images/Platform.png",
-    "Hitboxes": 
-            {"0": {
-                "type": "Hitbox",
-                "position":{"x": 10, "y": 30},
-                "size": {"x": 30, "y": 30},
-                "mask": 0
-            }
-        }
+    "TexturePath": "assets/images/Platform.png"
     },
     "1":{
         "type": "Platform",
@@ -25,5 +17,11 @@
         "name": "Player",
         "position":{"x":0, "y":0},
         "TexturePath": "assets/images/Dude.png"
+    },
+    "3":{
+        "type": "Platform",
+        "name" : "Platform3",
+        "position": {"x":700, "y": 700},
+        "TexturePath": "assets/images/Platform.png"
     }
 }

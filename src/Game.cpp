@@ -7,9 +7,19 @@ Game::Game(){
 }
 
 Game::~Game(){
+    // Clean up UI things
     delete Debug::debugLogger;
     delete _debug;
     delete _uimaster;
+    delete _camera;
+    // Clean gameobjects
+    for(int i = 0; i < _gameObjects.size(); i++){
+        delete _gameObjects[i];
+    }
+    _gameObjects.clear();
+    SDL_DestroyRenderer(_renderer);
+    SDL_DestroyWindow(_window);
+    SDL_Quit();
 }
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen){
@@ -43,6 +53,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         // Initialize gameobjects
         LevelLoader levelLoader(_renderer);
         _gameObjects = levelLoader.loadLevelFromFile(ASSETS_PATH + "levels/Test.json");
+        _player = (Player*)_gameObjects[2];
         cout << "Game objects initialized! Loaded " << _gameObjects.size() << " Objects!" << endl;
     }
     else{
@@ -58,6 +69,12 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     Debug::debugLogger = (DebugLogger*)_uimaster->getElement(0);
     cout << "UI initialized!" << endl;
 
+    // Init Camera
+    // STRETCH: Multiple cameras
+    _camera = new Camera(_renderer); 
+    _camera->setObjectToFollow(_player);
+    _camera->setFollowMode(true);
+    cout << "Camera initialized!" << endl;
 }
 
 void Game::handleEvents(){
@@ -80,7 +97,6 @@ void Game::handleEvents(){
  * Handle keyboard input for player etc.
  * */
 void Game::handleInput(){
-    SDL_PumpEvents();
     const uint8_t* state = SDL_GetKeyboardState(nullptr);
     // Send inputs to game objects
     for(int i = 0; i < _gameObjects.size(); i++){
@@ -93,34 +109,15 @@ void Game::update(){
     for(int i = 0; i< _gameObjects.size(); i++){
         _gameObjects[i]->update();
     }
+    // Update camera
+    _camera->update();
 }
 
 void Game::render(){
-    // Clear old stuff that shouldn't be rendered
-    SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
-    SDL_RenderClear(_renderer);
-    // Add stuff to render here
-    // The last thing painted is the foremost in the image
-    for(int i = 0; i < _gameObjects.size(); i++){
-        _gameObjects[i]->render();
-    }
-    // Render UI elements last so they show up on top
-    _uimaster->renderAllElements();
-    // ------------------------
-    SDL_RenderPresent(_renderer);
+    _camera->renderGameObjects(_gameObjects);
 }
 
 void Game::clean(){
-    // Make sure to deconstruct all gameobjects    
-    for(int i = 0; i < _gameObjects.size(); i++){
-        _gameObjects[i]->~GameObject();
-    }
-    // Clean up resources
-    SDL_DestroyWindow(_window);
-    SDL_DestroyRenderer(_renderer);
-    SDL_Quit();
-
-    cout << "Game cleaned." << endl;
 }
 
 void Game::checkForCollisions(){
