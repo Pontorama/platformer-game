@@ -64,6 +64,7 @@ void Camera::move(){
  * */
 void Camera::update(){
     move();
+    Debug::debugLogger->log(std::to_string(_pos.x));
 }
 
 /*!

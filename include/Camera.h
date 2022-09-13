@@ -7,6 +7,7 @@
 #include "UIElement.h"
 #include "RenderUtils.h"
 #include "CameraUtils.h"
+#include "DebugLogger.h"
 #include <vector>
 
 using namespace Vector;
