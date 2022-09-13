@@ -14,11 +14,11 @@ Camera::~Camera(){
  * */
 void Camera::init(){
     // TODO: Test these values
-    _scrollSpeedX = 0.05;
-    _scrollSpeedY = 0.05;
+    _scrollSpeedX = 0.2;
+    _scrollSpeedY = 0.2;
     _zoomLevel = 1;
 
-    _viewSize = {DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_HEIGHT};
+    _viewSize = {DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT};
 
     _focusZone = {(int)(_viewSize.x / 2) - 100, (int)(_viewSize.y / 2) - 100, 200, 200};
 
@@ -36,7 +36,6 @@ void Camera::renderGameObjects(vector<GameObject*> objectsToRender){
     for(auto obj : objectsToRender){
         renderObject(obj);
     }
-    SDL_RenderPresent(_renderer);
 }
 
 /*!
@@ -50,11 +49,10 @@ void Camera::move(){
             // Move camera to follow
             _dir = _objToFollow->getPos() + Vector2(focusInWorld.x, focusInWorld.y)*(-1.f);
             _dir.normalise();
+        }else{
+            _dir = {0, 0};
         }
-    }else{
-        _dir = {0, 0};
     }
-
     _pos.x += _dir.x * _scrollSpeedX * TIME_PER_FRAME;
     _pos.y += _dir.y * _scrollSpeedY * TIME_PER_FRAME;
 }
@@ -122,10 +120,32 @@ void Camera::renderObject(GameObject* go){
  * TODO: Decide what parameters should go here
  * Under construction
  * */
-void Camera::renderDebug(){
-
+void Camera::renderDebug(vector<GameObject*> objectsToRender){
+    // Draw border around camera focus zone
+    if(CAMERA_DEBUG_MODE){
+        RenderUtils::drawOutline(_focusZone, CameraUtils::FOCUS_ZONE_DEBUG_COLOR, _renderer);
+        RenderUtils::drawCross(_viewSize * (1/2.f), 5, CameraUtils::FOCUS_ZONE_DEBUG_COLOR, _renderer);
+    }
+    // Draw border around hitboxes
+    for(auto obj : objectsToRender){
+       vector<Hitbox*> hbs = obj->getHitboxes(); 
+       for(auto hb : hbs){
+           Vector2 translatedPos = translateWorldToScreen(hb->getPos());
+           Vector2 translatedSize = hb->getSize()*_zoomLevel;
+           RenderUtils::drawOutline(translatedPos, translatedSize, CameraUtils::HITBOX_DEBUG_COLOR, _renderer);
+       }
+    }
 }
 
+void Camera::renderDebug(){
+    if(CAMERA_DEBUG_MODE){
+        RenderUtils::drawOutline(_focusZone, CameraUtils::FOCUS_ZONE_DEBUG_COLOR, _renderer);
+    }
+}
+
+void Camera::drawToScreen(){
+    SDL_RenderPresent(_renderer);
+}
 /*!
  * Set wether the camera should follow a game object or not.
  * The game object to follow is set with setObjectToFollow.

@@ -115,6 +115,11 @@ void Game::update(){
 
 void Game::render(){
     _camera->renderGameObjects(_gameObjects);
+    if(DEBUG_MODE){
+        _camera->renderDebug(_gameObjects);
+    }
+
+    _camera->drawToScreen();
 }
 
 void Game::clean(){

@@ -19,6 +19,8 @@ class Camera {
         void renderGameObjects(vector<GameObject*> objectsToRender);
         void renderUI(vector<UIElement*> uiElementsToRender);
         void renderDebug();
+        void renderDebug(vector<GameObject*> objectsToRender);
+        void drawToScreen();
         void move();
         void update();
         Vector2 translateWorldToScreen(Vector2 worldPos);

@@ -2,6 +2,9 @@
 #define RenderUtils_h
 
 #include "SDL2/SDL_render.h"
+#include "Vector2.h"
+
+using namespace Vector;
 
 namespace RenderUtils{
     struct RenderInfo {
@@ -15,6 +18,8 @@ namespace RenderUtils{
         SDL_Rect* destRect;
     };
 
-    bool boxInsideBox(SDL_Rect box1, SDL_Rect box2);
+    void drawOutline(SDL_Rect rect, SDL_Color c, SDL_Renderer* renderer);
+    void drawOutline(Vector2 pos, Vector2 size, SDL_Color c, SDL_Renderer* renderer);
+    void drawCross(Vector2 point, int size, SDL_Color c, SDL_Renderer* renderer);
 }
 #endif

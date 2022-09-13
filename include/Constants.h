@@ -30,7 +30,9 @@ const std::string HITBOX_TYPE = "Hitbox";
 const std::string ASSETS_PATH = "/home/pongu/dev/platformer-game/assets/";
 const std::string PLAYER_TEXTURE_PATH = ASSETS_PATH + "images/Dude.png";
 
-// Debug
-const int DEBUG_MODE = 1;
+// Debug flags
+const int DEBUG_MODE = 1; // General debug mode
+const bool CAMERA_DEBUG_MODE = 1; // Render border around focus zone, show center point
+
 
 #endif
