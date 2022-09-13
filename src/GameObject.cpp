@@ -28,6 +28,7 @@ void GameObject::_init(const char* textureSheet, SDL_Renderer* ren){
     _destRect = {(int)_pos.x, (int)_pos.y, (int)_imageSize.x, (int)_imageSize.y};
 
     _hitboxes = vector<Hitbox*>();
+
 }
 
 GameObject::GameObject(){
@@ -43,17 +44,18 @@ GameObject::~GameObject(){
     for(int i = 0; i < _hitboxes.size(); i++){
         delete _hitboxes[i];
     }
+    _hitboxes.clear();
+    for(int i = 0; i < _nearbyHitboxes.size(); i++){
+        delete _nearbyHitboxes[i];
+    }
+    _nearbyHitboxes.clear();
+    // Free texture
+    SDL_DestroyTexture(_objTexture);
 }
 
 void GameObject::update(){
 }
 
-void GameObject::render(){
-    SDL_RenderCopy(_ren, _objTexture, &_srcRect, &_destRect);
-    if(DEBUG_MODE){
-        drawAllHitboxOutlines();
-    }
-}
 
 float GameObject::getXPos(){
     return _pos.x;
@@ -178,4 +180,29 @@ vector<Hitbox*> GameObject::getHitboxes(){
  * */
 void GameObject::detectCollisions(){
 
+}
+
+SDL_Texture* GameObject::getTexture(){
+    return _objTexture;
+}
+
+SDL_Rect* GameObject::getSrcRect(){
+    return &_srcRect;
+}
+
+SDL_Rect* GameObject::getDestRect(){
+    return &_destRect;
+}
+
+/*!
+ * Return info about rendering the game object
+ * TODO: Support for multiple textures?
+ * */
+RenderInfo GameObject::getRenderInfo(){
+    RenderInfo out;
+    out.texture = _objTexture;
+    out.srcRect = &_srcRect;
+    out.destRect = &_destRect;
+
+    return out;
 }

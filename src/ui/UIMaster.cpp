@@ -17,6 +17,7 @@ UIMaster::~UIMaster(){
     for(int i = 0; i < _elements.size(); i++){
         delete _elements[i];
     }
+    _elements.clear();
 }
 
 void UIMaster::renderAllElements(){

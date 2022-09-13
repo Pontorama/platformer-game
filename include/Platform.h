@@ -12,7 +12,6 @@ class Platform : public  GameObject{
         Platform(const char* textureSheet, SDL_Renderer* ren, Vector2 pos, std::string name, int id);
         ~Platform();
 
-        void render();
         void update();
     private:
         void actOnCollision(GameObject* other);

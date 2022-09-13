@@ -2,7 +2,6 @@
 #include "Constants.h"
 
 using namespace std;
-Game* game = nullptr;
 
 int main(int argc, char* args[]){
 
@@ -12,18 +11,18 @@ int main(int argc, char* args[]){
     Uint32 framestart;
     int frametime;
 
-    game = new Game();
+    Game game = Game();
 
-    game->init("Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, false);
+    game.init("Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, false);
 
-    while(game->running()){
+    while(game.running()){
         // Do game loop
         framestart = SDL_GetTicks();
 
-        game->handleEvents();
-        game->handleInput();
-        game->update();
-        game->render();
+        game.handleEvents();
+        game.handleInput();
+        game.update();
+        game.render();
 
         frametime = SDL_GetTicks() - framestart;
 
@@ -33,6 +32,6 @@ int main(int argc, char* args[]){
         }
     }
 
-    game->clean();
+    game.clean();
     return 0;
 }

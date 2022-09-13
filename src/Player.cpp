@@ -33,16 +33,8 @@ Player::Player(const char* textureSheet, SDL_Renderer* ren, Vector2 position) : 
 }
 
 Player::~Player(){
-    for(int i = 0; i<_hitboxes.size(); i++){
-        delete _hitboxes[i];
-    }
-    _hitboxes.clear();
-    for(int i = 0; i < _nearbyHitboxes.size(); i++){
-        delete _nearbyHitboxes[i];
-    }
-    _nearbyHitboxes.clear();
-    // Free ground checker
-    delete _groundChecker;
+    // Run destructor for parent class
+    GameObject::~GameObject();
 }
 
 Vector2 Player::getSpeed(){
@@ -52,11 +44,9 @@ Vector2 Player::getSpeed(){
 void Player::handleInput(const uint8_t* state){
     _dir = {0, 0};
     if(state[SDL_SCANCODE_D]){
-        Debug::debugLogger->log("D");
         _dir.x += 1;
     }
     if(state[SDL_SCANCODE_A]){
-        Debug::debugLogger->log("A");
         _dir.x -= 1;
     }
     if(state[SDL_SCANCODE_S]){
@@ -124,16 +114,6 @@ void Player::move(){
 
     // Reset jump
     _doJump = false;
-}
-
-/*!
-    Render the player to the screen
-*/
-void Player::render(){
-    if(DEBUG_MODE){
-        GameObject::drawHitboxOutline(_groundChecker, {234, 19, 27, 255});
-    }
-    GameObject::render();
 }
 
 /*!
@@ -226,3 +206,4 @@ void Player::draw(){
     _destRect.x = _pos.x;
     _destRect.y = _pos.y;
 }
+
