@@ -67,6 +67,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     _uimaster->addElement(_debug);
     // Set global pointer
     Debug::debugLogger = (DebugLogger*)_uimaster->getElement(0);
+    Debug::debugLogger->setVisible(true);
     cout << "UI initialized!" << endl;
 
     // Init Camera
@@ -114,12 +115,15 @@ void Game::update(){
 }
 
 void Game::render(){
+    // Prepare rendering of game objects
     _camera->renderGameObjects(_gameObjects);
     if(DEBUG_MODE){
         _camera->renderDebug(_gameObjects);
     }
+    // Render UI
+    _uimaster->renderAllElements();
 
-    _camera->drawToScreen();
+    SDL_RenderPresent(_renderer);
 }
 
 void Game::clean(){
