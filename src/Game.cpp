@@ -127,6 +127,7 @@ void Game::render(){
 }
 
 void Game::clean(){
+
 }
 
 void Game::checkForCollisions(){
