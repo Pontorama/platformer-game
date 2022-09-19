@@ -2,25 +2,37 @@
 
 using namespace std;
 
-GameObject::GameObject(const char* textureSheet, SDL_Renderer* ren){
+/*!
+ * Copy constructor
+ * */
+GameObject::GameObject(GameObject* go, int id){
+    _pos = go->getPos();
+    _init(go->_renderer);
+    _renderer = go->_renderer;
+    _animator = go->_animator;
+    _id = id;
+}
+
+
+GameObject::GameObject(SDL_Renderer* ren){
     _pos = Vector2(0,0);
-    _init(textureSheet, ren);
+    _init(ren);
     _renderer = ren;
+    _animator = Animator();
 }
 
-GameObject::GameObject(const char* textureSheet, SDL_Renderer* ren, Vector2 pos){
+GameObject::GameObject(SDL_Renderer* ren, Vector2 pos){
     _pos = pos;
-    _init(textureSheet, ren);
+    _init(ren);
 }
 
-void GameObject::_init(const char* textureSheet, SDL_Renderer* ren){
+void GameObject::_init(SDL_Renderer* ren){
     // Helper function for constructors
     // Assign _pos BEFORE calling this function
     _ren = ren;
-    _objTexture = TextureManager::loadTexture(textureSheet, ren);
     int w, h;
 
-    SDL_QueryTexture(_objTexture, NULL, NULL, &w, &h);
+    SDL_QueryTexture(_animator.getDefaultTexture(), NULL, NULL, &w, &h);
     _imageSize = {(float)w, (float)h};
     _imageSize.x *= SCALE_FACTOR_X;
     _imageSize.y *= SCALE_FACTOR_Y;
@@ -31,9 +43,16 @@ void GameObject::_init(const char* textureSheet, SDL_Renderer* ren){
 
 }
 
+void GameObject::initAnimator(map<string, Sequence> sequences){
+    _animator = Animator(sequences);
+}
+
+void GameObject::initAnimator(SDL_Texture* defaultTexture){
+    _animator = Animator(defaultTexture);
+}
+
 GameObject::GameObject(){
     _ren = NULL;
-    _objTexture = NULL;
     _pos = Vector2();
 
     _srcRect = {0, 0, 0, 0};
@@ -49,8 +68,6 @@ GameObject::~GameObject(){
         delete _nearbyHitboxes[i];
     }
     _nearbyHitboxes.clear();
-    // Free texture
-    SDL_DestroyTexture(_objTexture);
 }
 
 void GameObject::update(){
@@ -182,9 +199,6 @@ void GameObject::detectCollisions(){
 
 }
 
-SDL_Texture* GameObject::getTexture(){
-    return _objTexture;
-}
 
 SDL_Rect* GameObject::getSrcRect(){
     return &_srcRect;
@@ -195,14 +209,13 @@ SDL_Rect* GameObject::getDestRect(){
 }
 
 /*!
- * Return info about rendering the game object
- * TODO: Support for multiple textures?
+ * Get the frame (image) to be rendered
+ * wrapper for animator, which controls what to draw on screen
  * */
-RenderInfo GameObject::getRenderInfo(){
-    RenderInfo out;
-    out.texture = _objTexture;
-    out.srcRect = &_srcRect;
-    out.destRect = &_destRect;
+SDL_Texture* GameObject::getNextFrame(){
+    return _animator.getNextFrame();
+}
 
-    return out;
+void GameObject::setName(string newName){
+    _name = newName;
 }

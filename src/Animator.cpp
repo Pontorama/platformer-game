@@ -41,6 +41,15 @@ SDL_Texture* Sequence::getNextFrame(){
     }
 }
 
+
+/*!
+ * Get the current frame, without incrementing
+ * the sequence screen frame counter
+ * */
+SDL_Texture* Sequence::getCurrentFrame(){
+    return _frames[_currentFrame].image;
+}
+
 /*!
  * Load from description file
  * Loads an animation sequence from json file containing data about the sequence
@@ -101,6 +110,81 @@ Animator::Animator(){
 
 }
 
-Animator::~Animator(){
+Animator::Animator(SDL_Texture* defaultTexture){
+    _defaultTexture = defaultTexture;
+    _useDefaultTexture = true;
+}
 
+Animator::Animator(std::map<std::string, Sequence> sequences){
+    _sequences = sequences;
+    _useDefaultTexture = false;
+    _currentSequenceName = _sequences.begin()->first;
+    _defaultTexture = _sequences.begin()->second.getCurrentFrame();
+}
+
+Animator::Animator(vector<string> sequenceDescFileNames, SDL_Renderer* renderer){
+    // Construct sequences from files
+    for(auto filename : sequenceDescFileNames){
+        Sequence tempSeq = Sequence(filename, renderer);
+        _sequences[tempSeq.getName()] = tempSeq;
+    }
+    // Use first frame as default texture
+    _defaultTexture = _sequences.begin()->second.getCurrentFrame();
+    _useDefaultTexture = false;
+}
+
+Animator::~Animator(){
+    SDL_DestroyTexture(_defaultTexture);
+}
+
+/*!
+ * Get next frame to be displayed
+ * */
+SDL_Texture* Animator::getNextFrame(){
+    if(_useDefaultTexture || _sequences.size() == 0){
+        return _defaultTexture;
+    }
+    return _sequences[_currentSequenceName].getNextFrame();
+}
+
+/*!
+ * Get current sequence name
+ * */
+string Animator::getCurrentSequence(){
+    return _currentSequenceName;
+}
+
+/*!
+ * Select sequence by name
+ * */
+void Animator::selectSequence(string sequenceName){
+    // Check if sequenceName exists in _sequences
+    // If the name is in keys, count will be 1
+    if(_sequences.count(sequenceName)){
+        _currentSequenceName = sequenceName;
+    }
+    // If the name is not valid, keep the current one
+}
+
+/*!
+ * Get the current frame image without incrementing the counter
+ * Wrapper to get texture from sequence
+ * */
+SDL_Texture* Animator::getCurrentFrame(){
+    if(_useDefaultTexture || _sequences.size() == 0){
+        return _defaultTexture;
+    }
+    return _sequences[_currentSequenceName].getCurrentFrame();
+}
+
+
+/*!
+ * Get default texture, used as placeholder / when no animations are playing
+ * */
+SDL_Texture* Animator::getDefaultTexture(){
+    return _defaultTexture;
+}
+
+void Animator::useDefaultTexture(bool useDefault){
+    _useDefaultTexture = useDefault;
 }

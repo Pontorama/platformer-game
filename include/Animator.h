@@ -34,7 +34,11 @@ class Sequence {
         ~Sequence();
         
         SDL_Texture* getNextFrame();
+        std::string getName();
+        SDL_Texture* getCurrentFrame();
+
     private:
+        std::string _name;
         std::vector<Frame> _frames;
         uint _currentFrame; // Index of current frame in sequence
         uint _totaScreenFrameCount; // Total duration of the sequence in screen frames (FPSs)
@@ -46,14 +50,23 @@ class Sequence {
 class Animator {
     public:
         Animator();
+        Animator(std::vector<std::string> sequenceDescFileNames, SDL_Renderer* renderer);
+        Animator(std::map<std::string, Sequence> sequences);
+        Animator(SDL_Texture* defaultTexture);
         ~Animator();
         
         SDL_Texture* getNextFrame();
-        void selectSequence();
+        void selectSequence(std::string sequenceName);
+        std::string getCurrentSequence();
+        SDL_Texture* getDefaultTexture();
+        SDL_Texture* getCurrentFrame();
 
+        void useDefaultTexture(bool useDefault);
     private:
         std::map<std::string, Sequence> _sequences;
         std::string _currentSequenceName;
+        SDL_Texture* _defaultTexture;
+        bool _useDefaultTexture;
 };
 
 #endif

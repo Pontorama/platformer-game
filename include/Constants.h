@@ -1,6 +1,8 @@
 #ifndef Constants_h
 #define Constants_h
 
+#include <string>
+
 // Framerates
 const int FRAMERATE = 60;
 const float TIME_PER_FRAME = 1000/FRAMERATE;

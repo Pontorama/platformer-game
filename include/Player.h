@@ -12,8 +12,9 @@
 class Player : public GameObject{
     public:
         Player();
-        Player(const char* textureSheet, SDL_Renderer* ren);
-        Player(const char* textureSheet, SDL_Renderer* ren, Vector2 pos);
+        Player(GameObject* base);
+        Player(SDL_Renderer* ren);
+        Player(SDL_Renderer* ren, Vector2 pos);
         ~Player();
 
         Vector2 getSpeed();

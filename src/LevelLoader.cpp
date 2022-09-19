@@ -9,16 +9,12 @@ LevelLoader::LevelLoader(SDL_Renderer* renderer){
     _renderer = renderer;
 }
 
-Platform* LevelLoader::platformFromJson(json::object_t object, int id){
-    Vector2 pos = {object["position"]["x"].get<float>(), object["position"]["y"].get<float>()};
-
-    return new Platform(object["TexturePath"].get<string>().c_str(), _renderer, pos, object["name"].get<string>().c_str(), id);
+Platform* LevelLoader::platformFromJson(GameObject* base, int id){
+    return new Platform(base, id);
 }
 
-Player* LevelLoader::playerFromJson(json::object_t object, int id){
-    Vector2 pos = {object["position"]["x"].get<float>(), object["position"]["y"].get<float>()};
-
-    return new Player(object["TexturePath"].get<string>().c_str(), _renderer, pos);
+Player* LevelLoader::playerFromJson(GameObject* base, int id){
+    return new Player(base);
 }
 
 Hitbox* LevelLoader::hitboxFromJson(json::object_t object){
@@ -55,12 +51,31 @@ vector<GameObject*> LevelLoader::loadLevelFromFile(string path){
 
 GameObject* LevelLoader::loadGameObjectFromJson(json::object_t object, int id){
     // Load GameObject from json string
+    GameObject* go = new GameObject(_renderer);
+    // Read fields common to all gameobjects
+    go->setName(object["name"].get<string>());
+    go->setPosition(Vector2(object["position"]["x"].get<float>(), object["position"]["y"].get<float>()));
+    // If field animation present, init animator
+    if(object.count("animations") > 0){
+        // Animations defined in json
+        map<string, Sequence> sequences;
+        for(auto seq = object["animations"].begin(); seq != object["animations"].end(); ++seq){
+            sequences[seq.key()] = Sequence(seq.value(), _renderer);
+        }
+        go->initAnimator(sequences);
+    }else{
+        // Get default texture
+        // Load texture from file
+        SDL_Surface* tempSurf = IMG_Load(object["TexturePath"].get<string>().c_str());
+        go->initAnimator(SDL_CreateTextureFromSurface(_renderer, tempSurf));
+        SDL_FreeSurface(tempSurf);
+    }
+
+    // Create object of correct type
     string type = object["type"].get<string>();
-    if(type == PLATFORM_TYPE){
-        return platformFromJson(object, id);
-    }else if(type == PLAYER_TYPE){
-        return playerFromJson(object, id);
-    }else if(type == HITBOX_TYPE){
-        hitboxFromJson(object);
+    if(type == PLAYER_TYPE){
+        return playerFromJson(go, id);
+    }else if(type == PLATFORM_TYPE){
+        return platformFromJson(go, id);
     }
 }

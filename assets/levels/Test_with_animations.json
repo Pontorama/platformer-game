@@ -29,7 +29,7 @@
     },
     "4":{
         "type": "Platform",
-        "name": "BlinkingPlatform",
+        "name": "BlinkingBox",
         "position": {"x": 50, "y": 50},
         "animations":{
             "blink": "assets/Animations/Animation-test-sprite.json"

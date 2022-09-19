@@ -23,13 +23,20 @@ void Player::init(){
     _hitboxes.push_back(_groundChecker);
 }
 
-Player::Player(const char* textureSheet, SDL_Renderer* ren) : GameObject(textureSheet, ren){
+Player::Player(SDL_Renderer* ren) : GameObject(ren){
     init();
 }
 
-Player::Player(const char* textureSheet, SDL_Renderer* ren, Vector2 position) : GameObject(textureSheet, ren){
+Player::Player(SDL_Renderer* ren, Vector2 position) : GameObject(ren){
     init();
     _pos = position;
+}
+
+/*!
+ * Create Player from gameobject
+ * */
+Player::Player(GameObject* base, int id) : GameObject(base, id){
+    init();
 }
 
 Player::~Player(){

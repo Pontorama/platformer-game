@@ -30,8 +30,8 @@ class LevelLoader{
     private:
         SDL_Renderer* _renderer;
         
-        Platform* platformFromJson(json::object_t object, int id);
-        Player* playerFromJson(json::object_t object, int id);
+        Platform* platformFromJson(GameObject* base, int id);
+        Player* playerFromJson(GameObject* base, int id);
 
         Hitbox* hitboxFromJson(json::object_t object);
 
