@@ -12,7 +12,7 @@
 class Player : public GameObject{
     public:
         Player();
-        Player(GameObject* base);
+        Player(GameObject* base, int id);
         Player(SDL_Renderer* ren);
         Player(SDL_Renderer* ren, Vector2 pos);
         ~Player();

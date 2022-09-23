@@ -2,15 +2,27 @@
 
 using namespace std;
 
+GameObject::GameObject(){
+    _pos = Vector2(0, 0);
+    _renderer = NULL;
+
+}
+
 /*!
  * Copy constructor
  * */
 GameObject::GameObject(GameObject* go, int id){
     _pos = go->getPos();
-    _init(go->_renderer);
+    _prevPos = go->getPrevPos();
     _renderer = go->_renderer;
-    _animator = go->_animator;
+    _animator = new Animator(go->_animator);
     _id = id;
+    _name = go->getName();
+    _hitboxes = go->getHitboxes();
+    _imageSize = go->getImageSize();
+    _srcRect = go->getSrcRect();
+    _destRect = go->getDestRect();
+    _nearbyHitboxes = go->getNearbyHitboxes();
 }
 
 
@@ -18,21 +30,19 @@ GameObject::GameObject(SDL_Renderer* ren){
     _pos = Vector2(0,0);
     _init(ren);
     _renderer = ren;
-    _animator = Animator();
 }
 
 GameObject::GameObject(SDL_Renderer* ren, Vector2 pos){
     _pos = pos;
     _init(ren);
+    _renderer = ren;
 }
 
 void GameObject::_init(SDL_Renderer* ren){
     // Helper function for constructors
     // Assign _pos BEFORE calling this function
     _ren = ren;
-    int w, h;
-
-    SDL_QueryTexture(_animator.getDefaultTexture(), NULL, NULL, &w, &h);
+    int w, h = 32; // Default vals
     _imageSize = {(float)w, (float)h};
     _imageSize.x *= SCALE_FACTOR_X;
     _imageSize.y *= SCALE_FACTOR_Y;
@@ -40,23 +50,29 @@ void GameObject::_init(SDL_Renderer* ren){
     _destRect = {(int)_pos.x, (int)_pos.y, (int)_imageSize.x, (int)_imageSize.y};
 
     _hitboxes = vector<Hitbox*>();
-
 }
 
-void GameObject::initAnimator(map<string, Sequence> sequences){
-    _animator = Animator(sequences);
+void GameObject::initAnimator(vector<string> fileNames){
+    _animator = new Animator(fileNames, _renderer);
+    int w, h;
+    SDL_QueryTexture(_animator->getNextFrame(), NULL, NULL, &w, &h);
+    _imageSize = {(float)w, (float)h};
+    _imageSize.x *= SCALE_FACTOR_X;
+    _imageSize.y *= SCALE_FACTOR_Y;
+    _srcRect = {0, 0, w, h};
+    _destRect = {(int)_pos.x, (int)_pos.y, (int)_imageSize.x, (int)_imageSize.y};
+
 }
 
 void GameObject::initAnimator(SDL_Texture* defaultTexture){
-    _animator = Animator(defaultTexture);
-}
-
-GameObject::GameObject(){
-    _ren = NULL;
-    _pos = Vector2();
-
-    _srcRect = {0, 0, 0, 0};
-    _destRect = {0, 0, 0, 0};
+    _animator = new Animator(defaultTexture);
+    int w, h;
+    SDL_QueryTexture(_animator->getDefaultTexture(), NULL, NULL, &w, &h);
+    _imageSize = {(float)w, (float)h};
+    _imageSize.x *= SCALE_FACTOR_X;
+    _imageSize.y *= SCALE_FACTOR_Y;
+    _srcRect = {0, 0, w, h};
+    _destRect = {(int)_pos.x, (int)_pos.y, (int)_imageSize.x, (int)_imageSize.y};
 }
 
 GameObject::~GameObject(){
@@ -68,6 +84,7 @@ GameObject::~GameObject(){
         delete _nearbyHitboxes[i];
     }
     _nearbyHitboxes.clear();
+    delete _animator;
 }
 
 void GameObject::update(){
@@ -83,7 +100,7 @@ float GameObject::getYPos(){
 }
 
 Vector2 GameObject::getPos(){
-    return _pos; // Should be pointer?
+    return _pos; 
 }
 
 tuple<Hitbox*, Hitbox*> GameObject::isColliding(GameObject* other){
@@ -200,12 +217,12 @@ void GameObject::detectCollisions(){
 }
 
 
-SDL_Rect* GameObject::getSrcRect(){
-    return &_srcRect;
+SDL_Rect GameObject::getSrcRect(){
+    return _animator->getSrcRect();
 }
 
-SDL_Rect* GameObject::getDestRect(){
-    return &_destRect;
+SDL_Rect GameObject::getDestRect(){
+    return _destRect;
 }
 
 /*!
@@ -213,9 +230,23 @@ SDL_Rect* GameObject::getDestRect(){
  * wrapper for animator, which controls what to draw on screen
  * */
 SDL_Texture* GameObject::getNextFrame(){
-    return _animator.getNextFrame();
+    return _animator->getNextFrame();
 }
 
 void GameObject::setName(string newName){
     _name = newName;
 }
+
+Vector2 GameObject::getImageSize(){
+    return _imageSize;
+}
+
+Vector2 GameObject::getPrevPos(){
+    return _prevPos;
+}
+
+vector<Hitbox*> GameObject::getNearbyHitboxes(){
+    return _nearbyHitboxes;
+}
+
+

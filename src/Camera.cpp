@@ -45,7 +45,7 @@ void Camera::move(){
     if(_followMode && _objToFollow != nullptr){
         // Check if object to follow is outside focus zone
         SDL_Rect focusInWorld = translateScreenToWorld(_focusZone);
-        if(!CameraUtils::boxInsideBox(*_objToFollow->getDestRect(), focusInWorld)){
+        if(!CameraUtils::boxInsideBox(_objToFollow->getDestRect(), focusInWorld)){
             // Move camera to follow
             _dir = _objToFollow->getPos() + Vector2(focusInWorld.x, focusInWorld.y)*(-1.f);
             _dir.normalise();
@@ -109,9 +109,10 @@ SDL_Rect Camera::translateWorldToScreen(SDL_Rect worldRect){
  * */
 void Camera::renderObject(GameObject* go){
     // Translate world units to screen units
-    SDL_Rect destRect = translateWorldToScreen(*go->getDestRect());
+    SDL_Rect destRect = translateWorldToScreen(go->getDestRect());
+    SDL_Rect srcRect = go->getSrcRect();
     // Add to render stack
-    SDL_RenderCopy(_renderer, go->getTexture(), go->getSrcRect(), &destRect);
+    SDL_RenderCopy(_renderer, go->getNextFrame(), &srcRect, &destRect);
 }
 
 /*!

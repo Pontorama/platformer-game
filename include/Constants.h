@@ -5,7 +5,7 @@
 
 // Framerates
 const int FRAMERATE = 60;
-const float TIME_PER_FRAME = 1000/FRAMERATE;
+const float TIME_PER_FRAME = 1000.0/FRAMERATE;
 
 // Window constants
 const int DEFAULT_WINDOW_WIDTH = 1200;
@@ -30,7 +30,9 @@ const std::string HITBOX_TYPE = "Hitbox";
 
 // Paths
 const std::string ASSETS_PATH = "/home/pongu/dev/platformer-game/assets/";
+const std::string ASSETS_ANIMATIONS_PATH = ASSETS_PATH + "Animations/";
 const std::string PLAYER_TEXTURE_PATH = ASSETS_PATH + "images/Dude.png";
+const std::string DEFAULT_PINK_IMAGE = ASSETS_PATH + "images/Default_image.png";
 
 // Debug flags
 const int DEBUG_MODE = 1; // General debug mode

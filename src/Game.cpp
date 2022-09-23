@@ -17,6 +17,7 @@ Game::~Game(){
         delete _gameObjects[i];
     }
     _gameObjects.clear();
+    SDL_DestroyTexture(Texture::DEFAULT_PINK_TEXTURE);
     SDL_DestroyRenderer(_renderer);
     SDL_DestroyWindow(_window);
     SDL_Quit();
@@ -52,7 +53,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
         // Initialize gameobjects
         LevelLoader levelLoader(_renderer);
-        _gameObjects = levelLoader.loadLevelFromFile(ASSETS_PATH + "levels/Test.json");
+        _gameObjects = levelLoader.loadLevelFromFile(ASSETS_PATH + "levels/Test_with_animations.json");
         _player = (Player*)_gameObjects[2];
         cout << "Game objects initialized! Loaded " << _gameObjects.size() << " Objects!" << endl;
     }
@@ -60,6 +61,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         cout << "SDL could not initialize!" << endl;
         _isRunning = false;
     }
+    // Load default image
+    Texture::DEFAULT_PINK_TEXTURE = IMG_LoadTexture(_renderer, DEFAULT_PINK_IMAGE.c_str());
 
     // Init UI
     _uimaster = new UIMaster(_renderer);

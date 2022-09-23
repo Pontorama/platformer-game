@@ -10,11 +10,13 @@ LevelLoader::LevelLoader(SDL_Renderer* renderer){
 }
 
 Platform* LevelLoader::platformFromJson(GameObject* base, int id){
-    return new Platform(base, id);
+    Platform* out = new Platform(base, id);
+    return out;
 }
 
 Player* LevelLoader::playerFromJson(GameObject* base, int id){
-    return new Player(base);
+    Player* out = new Player(base, id);
+    return out;
 }
 
 Hitbox* LevelLoader::hitboxFromJson(json::object_t object){
@@ -32,7 +34,10 @@ vector<GameObject*> LevelLoader::loadLevelFromFile(string path){
     //          "type": [string],
     //          "position": {"x": [float], "y":[float]},
     //          "TexturePath": [string],
-    //          "Hitboxes": {}
+    //          "Hitboxes": {},
+    //          "animator":{
+    //              "sequnce_name": "json_path"
+    //          }
     //        }
 
     // Parse the json file
@@ -49,33 +54,36 @@ vector<GameObject*> LevelLoader::loadLevelFromFile(string path){
     return objectList;
 }
 
-GameObject* LevelLoader::loadGameObjectFromJson(json::object_t object, int id){
+GameObject* LevelLoader::loadGameObjectFromJson(json object, int id){
     // Load GameObject from json string
-    GameObject* go = new GameObject(_renderer);
+    GameObject go = GameObject(_renderer);
     // Read fields common to all gameobjects
-    go->setName(object["name"].get<string>());
-    go->setPosition(Vector2(object["position"]["x"].get<float>(), object["position"]["y"].get<float>()));
+    go.setName(object["name"].get<string>());
+    go.setPosition(Vector2(object["position"]["x"].get<float>(), object["position"]["y"].get<float>()));
     // If field animation present, init animator
-    if(object.count("animations") > 0){
+    if(object.contains("animations")){
         // Animations defined in json
-        map<string, Sequence> sequences;
-        for(auto seq = object["animations"].begin(); seq != object["animations"].end(); ++seq){
-            sequences[seq.key()] = Sequence(seq.value(), _renderer);
+        if(!object["animations"].empty()){
+            vector<string> fileNames;
+            for(auto &seq : object["animations"].items()){
+                fileNames.push_back(ASSETS_ANIMATIONS_PATH + string(seq.value()));
+            }
+            go.initAnimator(fileNames);
+        }else{
+            // Get default texture
+            // Load texture from file
+            SDL_Texture* temp = IMG_LoadTexture(_renderer, string(ASSETS_PATH + object["TexturePath"].get<string>()).c_str());
+            go.initAnimator(temp);
         }
-        go->initAnimator(sequences);
     }else{
-        // Get default texture
-        // Load texture from file
-        SDL_Surface* tempSurf = IMG_Load(object["TexturePath"].get<string>().c_str());
-        go->initAnimator(SDL_CreateTextureFromSurface(_renderer, tempSurf));
-        SDL_FreeSurface(tempSurf);
+        SDL_Texture* temp = IMG_LoadTexture(_renderer, string(ASSETS_PATH + object["TexturePath"].get<string>()).c_str());
+        go.initAnimator(temp);
     }
-
     // Create object of correct type
     string type = object["type"].get<string>();
     if(type == PLAYER_TYPE){
-        return playerFromJson(go, id);
+        return playerFromJson(&go, id);
     }else if(type == PLATFORM_TYPE){
-        return platformFromJson(go, id);
+        return platformFromJson(&go, id);
     }
 }

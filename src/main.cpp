@@ -23,7 +23,6 @@ int main(int argc, char* args[]){
         game.handleInput();
         game.update();
         game.render();
-
         frametime = SDL_GetTicks() - framestart;
 
         if(frameDelay > frametime){

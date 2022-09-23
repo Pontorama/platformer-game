@@ -33,9 +33,11 @@ class GameObject{
         Vector2 getPos();
         string getName();
         void setName(string newName);
-        SDL_Rect* getSrcRect();
-        SDL_Rect* getDestRect();
+        SDL_Rect getSrcRect();
+        SDL_Rect getDestRect();
         SDL_Texture* getNextFrame();
+        Vector2 getImageSize();
+        Vector2 getPrevPos();
 
         tuple<Hitbox*, Hitbox*> isColliding(GameObject* other);
         virtual void actOnCollision(Hitbox* local_hitbox, Hitbox* other);
@@ -47,9 +49,10 @@ class GameObject{
         int getHitboxCount();
         Hitbox* getHitbox(int index);
         vector<Hitbox*> getHitboxes();
+        vector<Hitbox*> getNearbyHitboxes();
 
         // Initers for animator
-        void initAnimator(map<string, Sequence> sequences);
+        void initAnimator(vector<string> fileNames);
         void initAnimator(SDL_Texture* defaultTexture);
 
         // Update and render, collision detection
@@ -73,7 +76,7 @@ class GameObject{
         void drawAllHitboxOutlines();
         void drawHitboxOutline(Hitbox* hb, SDL_Color c);
         vector<Hitbox*> _nearbyHitboxes;
-        Animator _animator; // Optional animator
+        Animator* _animator; // Optional animator
 };
 
 #endif /* GameObject_h */

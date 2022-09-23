@@ -25,7 +25,7 @@ class LevelLoader{
     public:
         LevelLoader(SDL_Renderer* renderer);
         vector<GameObject*> loadLevelFromFile(string path);
-        GameObject* loadGameObjectFromJson(json::object_t object, int id);
+        GameObject* loadGameObjectFromJson(json object, int id);
 
     private:
         SDL_Renderer* _renderer;
