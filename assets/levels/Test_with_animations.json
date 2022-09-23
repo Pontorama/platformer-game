@@ -4,7 +4,8 @@
     "name": "Platform1",
     "position": {"x":10, "y":400},
     "TexturePath": "images/Platform.png",
-    "animations":{}
+    "animations":{
+    }
     },
     "1":{
         "type": "Platform",
@@ -20,7 +21,7 @@
         "position":{"x":0, "y":0},
         "TexturePath": "images/Dude.png",
         "animations": {
-
+            "idle": "Orangutan2.json"
         }
     },
     "3":{

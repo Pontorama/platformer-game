@@ -18,8 +18,6 @@ Platform::Platform(GameObject* base, int id) : GameObject(base, id){
 }
 
 Platform::~Platform(){
-    // Run parent class destructor
-    GameObject::~GameObject();
 }
 
 void Platform::update(){

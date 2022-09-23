@@ -13,6 +13,7 @@ GameObject::GameObject(){
  * */
 GameObject::GameObject(GameObject* go, int id){
     _pos = go->getPos();
+    _dir = go->getDir();
     _prevPos = go->getPrevPos();
     _renderer = go->_renderer;
     _animator = new Animator(go->_animator);
@@ -50,6 +51,7 @@ void GameObject::_init(SDL_Renderer* ren){
     _destRect = {(int)_pos.x, (int)_pos.y, (int)_imageSize.x, (int)_imageSize.y};
 
     _hitboxes = vector<Hitbox*>();
+    _dir = {1, 0};
 }
 
 void GameObject::initAnimator(vector<string> fileNames){
@@ -250,3 +252,6 @@ vector<Hitbox*> GameObject::getNearbyHitboxes(){
 }
 
 
+Vector2 GameObject::getDir(){
+    return _dir;
+}

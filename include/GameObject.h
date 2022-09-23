@@ -38,6 +38,7 @@ class GameObject{
         SDL_Texture* getNextFrame();
         Vector2 getImageSize();
         Vector2 getPrevPos();
+        Vector2 getDir();
 
         tuple<Hitbox*, Hitbox*> isColliding(GameObject* other);
         virtual void actOnCollision(Hitbox* local_hitbox, Hitbox* other);
@@ -69,6 +70,7 @@ class GameObject{
         Vector2 _prevPos; // Previous position
         Vector2 _imageSize;
         SDL_Rect _srcRect, _destRect;
+        Vector2 _dir;
         SDL_Renderer* _ren;
         vector<Hitbox*> _hitboxes; // Potential FIXME , might not be how to handle lists in this case
         string _name;

@@ -111,8 +111,10 @@ void Camera::renderObject(GameObject* go){
     // Translate world units to screen units
     SDL_Rect destRect = translateWorldToScreen(go->getDestRect());
     SDL_Rect srcRect = go->getSrcRect();
+    // TODO fix this with something better
+    SDL_RendererFlip flip = go->getDir().x < 0 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
     // Add to render stack
-    SDL_RenderCopy(_renderer, go->getNextFrame(), &srcRect, &destRect);
+    SDL_RenderCopyEx(_renderer, go->getNextFrame(), &srcRect, &destRect, 0, NULL, flip);
 }
 
 /*!

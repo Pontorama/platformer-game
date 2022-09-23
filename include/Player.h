@@ -1,15 +1,15 @@
 #ifndef Player_h
 #define Player_h
 
-#include "GameObject.h"
 #include "SDL2/SDL_image.h"
 #include "Constants.h"
 #include "Hitbox.h"
 #include <iostream>
 #include <cmath>
 #include "DebugLogger.h"
+#include "Creature.h"
 
-class Player : public GameObject{
+class Player : public Creature {
     public:
         Player();
         Player(GameObject* base, int id);
@@ -22,18 +22,10 @@ class Player : public GameObject{
         void handleEvents(SDL_Event e);
         void handleInput(const uint8_t* state);
         void update();
-        void handleCollision(Hitbox* local, Hitbox* other);
         void move();
-        void draw();
-        void detectCollisions();
     private:
-        Vector2 _speed;
-        float _acceleration;  // TODO: Should no longer be a constant, use newtonian physics instead
-        Vector2 _dir; // The direction the player is moving in, should be normalized
-        bool _onGround;
         float _jumpSpeed;
         bool _doJump;
-        Hitbox* _groundChecker; // Hitbox to check if player is touching the ground
 
         void setPosition(Vector2 newPos);
         const float MAX_DIR_LEN = 1.5;

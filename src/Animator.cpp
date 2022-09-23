@@ -144,7 +144,8 @@ void Sequence::loadFromDescFile(std::string jsonFileName, SDL_Renderer* renderer
         SDL_Texture* image = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, srcRect.w, srcRect.h);
         // FIXME how to handle transparency?
         SDL_SetRenderTarget(renderer, image);
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+        SDL_SetTextureBlendMode(image, SDL_BLENDMODE_BLEND);
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, fullImage, &srcRect, &destRect);
         // Reset target back to screen
