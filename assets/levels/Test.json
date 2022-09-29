@@ -3,25 +3,25 @@
     "type":"Platform",
     "name": "Platform1",
     "position": {"x":10, "y":400},
-    "TexturePath": "assets/images/Platform.png"
+    "TexturePath": "images/Platform.png"
     },
     "1":{
         "type": "Platform",
         "name": "Platform2",
         "position": {"x": 30, "y": 700},
-        "TexturePath": "assets/images/Platform.png",
+        "TexturePath": "images/Platform.png",
         "Hitboxes":{}
     },
     "2":{
         "type": "Player",
         "name": "Player",
         "position":{"x":0, "y":0},
-        "TexturePath": "assets/images/Dude.png"
+        "TexturePath": "images/Dude.png"
     },
     "3":{
         "type": "Platform",
         "name" : "Platform3",
         "position": {"x":700, "y": 700},
-        "TexturePath": "assets/images/Platform.png"
+        "TexturePath": "images/Platform.png"
     }
 }

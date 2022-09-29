@@ -11,17 +11,18 @@
 #include <vector>
 #include "Hitbox.h"
 #include <tuple>
+#include "Animator.h"
 
 using namespace std;
 using namespace Vector;
-using RenderInfo = RenderUtils::RenderInfo;
 
 class GameObject{
     public:
         // Constructors
         GameObject();
-        GameObject(const char* textureSheet, SDL_Renderer* ren);
-        GameObject(const char* textureSheet, SDL_Renderer* ren, Vector2 pos);
+        GameObject(GameObject* go, int id);
+        GameObject(SDL_Renderer* ren);
+        GameObject(SDL_Renderer* ren, Vector2 pos);
 
         //Destructor
         virtual ~GameObject();  
@@ -31,10 +32,13 @@ class GameObject{
         float getYPos();
         Vector2 getPos();
         string getName();
-        SDL_Texture* getTexture();
-        SDL_Rect* getSrcRect();
-        SDL_Rect* getDestRect();
-        RenderInfo getRenderInfo();
+        void setName(string newName);
+        SDL_Rect getSrcRect();
+        SDL_Rect getDestRect();
+        SDL_Texture* getNextFrame();
+        Vector2 getImageSize();
+        Vector2 getPrevPos();
+        Vector2 getDir();
 
         tuple<Hitbox*, Hitbox*> isColliding(GameObject* other);
         virtual void actOnCollision(Hitbox* local_hitbox, Hitbox* other);
@@ -46,6 +50,7 @@ class GameObject{
         int getHitboxCount();
         Hitbox* getHitbox(int index);
         vector<Hitbox*> getHitboxes();
+        vector<Hitbox*> getNearbyHitboxes();
 
         // Update and render, collision detection
         virtual void update();
@@ -54,20 +59,17 @@ class GameObject{
         void clearNearbyHitboxes();
         virtual void detectCollisions();
 
+        // Animator
+        Animator* _animator;
+        void setAnimator(Animator* newAnimator);
+        
     protected:
-        void _init(const char* textureSheet, SDL_Renderer* ren);
-        SDL_Renderer* _renderer;
+        void _init(SDL_Renderer* ren);
         Vector2 _pos;
-        Vector2 _prevPos; // Previous position
-        Vector2 _imageSize;
-        SDL_Texture* _objTexture;
-        SDL_Rect _srcRect, _destRect;
-        SDL_Renderer* _ren;
+        Vector2 _dir;
         vector<Hitbox*> _hitboxes; // Potential FIXME , might not be how to handle lists in this case
         string _name;
         int _id;
-        void drawAllHitboxOutlines();
-        void drawHitboxOutline(Hitbox* hb, SDL_Color c);
         vector<Hitbox*> _nearbyHitboxes;
 };
 

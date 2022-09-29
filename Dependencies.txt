@@ -1,0 +1,3 @@
+giflib - http://giflib.sourceforge.net/
+SDL2 - https://www.libsdl.org/
+json for modern c++ - https://github.com/nlohmann/json

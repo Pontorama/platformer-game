@@ -1,66 +1,114 @@
 #include "LevelLoader.h"
 
-using namespace std;
-using json = nlohmann::json;
-
-// TODO add hitbox support for player and platform
-
-LevelLoader::LevelLoader(SDL_Renderer* renderer){
-    _renderer = renderer;
-}
-
-Platform* LevelLoader::platformFromJson(json::object_t object, int id){
-    Vector2 pos = {object["position"]["x"].get<float>(), object["position"]["y"].get<float>()};
-
-    return new Platform(object["TexturePath"].get<string>().c_str(), _renderer, pos, object["name"].get<string>().c_str(), id);
-}
-
-Player* LevelLoader::playerFromJson(json::object_t object, int id){
-    Vector2 pos = {object["position"]["x"].get<float>(), object["position"]["y"].get<float>()};
-
-    return new Player(object["TexturePath"].get<string>().c_str(), _renderer, pos);
-}
-
-Hitbox* LevelLoader::hitboxFromJson(json::object_t object){
-    Vector2 pos = {object["position"]["x"].get<float>(), object["position"]["y"].get<float>()};
-    Vector2 size = {object["size"]["x"].get<float>(), object["size"]["y"].get<float>()};
-    
-    return new Hitbox(pos, size, object["mask"].get<int>());
-}
-
-vector<GameObject*> LevelLoader::loadLevelFromFile(string path){
-    // Loads all gameobjects in level from json file
-    // Basic gameobjects are stored in json format like this:
-    //  "id": {
-    //          "name": [string],
-    //          "type": [string],
-    //          "position": {"x": [float], "y":[float]},
-    //          "TexturePath": [string],
-    //          "Hitboxes": {}
-    //        }
-
-    // Parse the json file
-    ifstream inputfile(path);
-    json objects = json::parse(inputfile);
-
-    vector<GameObject*> objectList = vector<GameObject*>();
-    
-
-    for(int i = 0; i < objects.size(); i++){
-        objectList.push_back(loadGameObjectFromJson(objects[to_string(i)].get<json::object_t>(), i));
+/*!
+ * Load level from JSON descriptor file
+ * @param[in] levelFilePath Path to JSON descriptor file
+ * @param[in] renderer SDL renderer to be used to create game objects
+ * @return A list of loaded game objects
+ * */
+vector<GameObject*> LevelLoader::loadLevelFromFile(string levelFilePath, SDL_Renderer* renderer){
+    // Load file
+    ifstream inputFile(levelFilePath);
+    // Load game objects as json objects
+    json gameObjects = json::parse(inputFile);
+    vector<GameObject*> out;
+    // Load objects
+    for(auto& go : gameObjects){
+        // Load correct type of object
+        string type = go["type"].get<string>();
+        if(type == PLAYER_TYPE){
+            out.push_back(LevelLoader::loadPlayer(go, renderer));
+        }else if( type == PLATFORM_TYPE){
+            out.push_back(LevelLoader::loadPlatform(go, renderer));
+        }else{
+            // Default loader goes here
+        }
     }
+    // Close file
+    inputFile.close();
 
-    return objectList;
+    return out;
 }
 
-GameObject* LevelLoader::loadGameObjectFromJson(json::object_t object, int id){
-    // Load GameObject from json string
-    string type = object["type"].get<string>();
-    if(type == PLATFORM_TYPE){
-        return platformFromJson(object, id);
-    }else if(type == PLAYER_TYPE){
-        return playerFromJson(object, id);
-    }else if(type == HITBOX_TYPE){
-        hitboxFromJson(object);
+/*!
+ * Get position from JSON game object descriptor
+ * @param[in] gameObjectDesc JSON descriptor of GameObject
+ * @return The position of the object
+ * */
+Vector2 LevelLoader::loadPos(json gameObjectDesc){
+    float x = gameObjectDesc["position"]["x"].get<float>();
+    float y = gameObjectDesc["position"]["y"].get<float>();
+
+    return Vector2(x, y);
+}
+
+/*!
+ * Get name of object from JSON descriptor
+ * @param[in] gameObjectDesc JSON descriptor of GameObject
+ * @return The name of the object
+ * */
+string LevelLoader::loadName(json gameObjectDesc){
+    return gameObjectDesc["name"].get<string>();
+}
+
+/*!
+ * Load animator from JSON descriptor.
+ * @param[in] gameObjectDesc JSON descriptor
+ * return Animator object to be used with a GameObject
+ * */
+Animator* LevelLoader::loadAnimator(json gameObjectDesc, SDL_Renderer* renderer){
+    if(gameObjectDesc.contains("animations")){
+        string animatorDecsFilePath = ASSETS_ANIMATIONS_PATH + gameObjectDesc["animations"].get<string>();
+        return new Animator(animatorDecsFilePath, renderer);
+    }else if(gameObjectDesc.contains("TexturePath")){
+        // Use default texture only
+        string imagePath = IMAGES_PATH + gameObjectDesc["TexturePath"].get<string>();
+        SDL_Texture* texture = IMG_LoadTexture(renderer, imagePath.c_str());
+        return new Animator(texture);
+    }else{
+        // No viable animator load
+        // Raise exception
+        throw InvalidJsonException(gameObjectDesc);
     }
+}
+
+/*!
+ * Load hitboxes from JSON descriptor
+ * To be implemented
+ * */
+vector<Hitbox*> LevelLoader::loadHitboxes(json gameObjectDesc){
+    return vector<Hitbox*>();
+}
+
+/*!
+ * Load the player from JSON descriptor
+ * @param[in] playerDesc JSON descriptor of player
+ * @return The player object loaded from JSON
+ * */
+Player* LevelLoader::loadPlayer(json playerDesc, SDL_Renderer* renderer){
+    Animator* anim = LevelLoader::loadAnimator(playerDesc, renderer);
+    Vector2 pos = LevelLoader::loadPos(playerDesc);
+    vector<Hitbox*> hitboxes = LevelLoader::loadHitboxes(playerDesc);
+    string name = LevelLoader::loadName(playerDesc);
+
+    cout << "Pos: " << pos.x << " " << pos.y << endl;
+    cout << "Name: " << name << endl;
+    return new Player(renderer, anim, hitboxes, pos, name);
+}
+
+/*!
+ * Load a platform from JSON desc
+ * @param[in] platformDesc JSON descriptor of platform
+ * @return A platform object loaded from JSON
+ * */
+Platform* LevelLoader::loadPlatform(json platformDesc, SDL_Renderer* renderer){
+    Animator* anim = LevelLoader::loadAnimator(platformDesc, renderer);
+    Vector2 pos = LevelLoader::loadPos(platformDesc);
+    vector<Hitbox*> hitboxes = LevelLoader::loadHitboxes(platformDesc);
+    string name = LevelLoader::loadName(platformDesc);
+
+    cout << "Pos: " << pos.x << " " << pos.y << endl;
+    cout << "Name: " << name << endl;
+
+    return new Platform(renderer, anim, hitboxes, pos, name);
 }

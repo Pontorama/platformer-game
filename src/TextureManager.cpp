@@ -7,3 +7,5 @@ SDL_Texture* TextureManager::loadTexture(const char* fileName, SDL_Renderer* ren
 
     return texture;
 }
+
+SDL_Texture* Texture::DEFAULT_PINK_TEXTURE;
