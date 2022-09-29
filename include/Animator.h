@@ -12,6 +12,10 @@
 #include <fstream>
 #include <map>
 
+// Constants
+const std::string DEFAULT_SEQUENCE_NAME = "default";
+
+
 /*!
  * Frames have an image to display and a duration
  * Duration = number of frames the image should be visible
@@ -42,7 +46,9 @@ class Frame {
 class Sequence {
     public:
         Sequence(Sequence* s);
+        Sequence(std::vector<Frame*> frames, std::string name);
         Sequence(std::string descFilePath, SDL_Renderer* renderer);
+        Sequence(std::string descFilePath, std::string name, SDL_Renderer* renderer); 
         ~Sequence();
         
         SDL_Texture* getNextFrame();
@@ -64,7 +70,9 @@ class Animator {
     public:
         Animator();
         Animator(Animator* a);
+        Animator(std::string descFilePath, SDL_Renderer* renderer);
         Animator(std::vector<std::string> sequenceDescFileNames, SDL_Renderer* renderer);
+        Animator(std::vector<std::string> sequenceDescFileNames, std::vector<std::string> sequenceNames, SDL_Renderer* renderer);
         Animator(std::map<std::string, Sequence*> sequences);
         Animator(SDL_Texture* defaultTexture);
         ~Animator();
@@ -85,6 +93,8 @@ class Animator {
         SDL_Rect _defaultTextureSrcRect;
         int* _textureSharedAccessCounter; // To keep track of if the texture should be deleted
         bool _useDefaultTexture;
+
+        void initFromDescFile(std::string descFilePath, SDL_Renderer* renderer);
 };
 
 #endif

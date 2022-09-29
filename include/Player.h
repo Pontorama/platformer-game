@@ -12,6 +12,7 @@
 class Player : public Creature {
     public:
         Player();
+        Player(SDL_Renderer* renderer, Animator* animator, vector<Hitbox*> hitboxes, Vector2 pos, string name);
         Player(GameObject* base, int id);
         Player(SDL_Renderer* ren);
         Player(SDL_Renderer* ren, Vector2 pos);

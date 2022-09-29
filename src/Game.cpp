@@ -52,8 +52,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         _isRunning = true;
 
         // Initialize gameobjects
-        LevelLoader levelLoader(_renderer);
-        _gameObjects = levelLoader.loadLevelFromFile(ASSETS_PATH + "levels/Test_with_animations.json");
+        _gameObjects = LevelLoader::loadLevelFromFile(ASSETS_PATH + "levels/Test_with_animations.json", _renderer);
         _player = (Player*)_gameObjects[2];
         cout << "Game objects initialized! Loaded " << _gameObjects.size() << " Objects!" << endl;
     }

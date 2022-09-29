@@ -4,7 +4,6 @@ using namespace std;
 
 GameObject::GameObject(){
     _pos = Vector2(0, 0);
-    _renderer = NULL;
 
 }
 
@@ -14,15 +13,10 @@ GameObject::GameObject(){
 GameObject::GameObject(GameObject* go, int id){
     _pos = go->getPos();
     _dir = go->getDir();
-    _prevPos = go->getPrevPos();
-    _renderer = go->_renderer;
     _animator = new Animator(go->_animator);
     _id = id;
     _name = go->getName();
     _hitboxes = go->getHitboxes();
-    _imageSize = go->getImageSize();
-    _srcRect = go->getSrcRect();
-    _destRect = go->getDestRect();
     _nearbyHitboxes = go->getNearbyHitboxes();
 }
 
@@ -30,51 +24,20 @@ GameObject::GameObject(GameObject* go, int id){
 GameObject::GameObject(SDL_Renderer* ren){
     _pos = Vector2(0,0);
     _init(ren);
-    _renderer = ren;
 }
 
 GameObject::GameObject(SDL_Renderer* ren, Vector2 pos){
     _pos = pos;
     _init(ren);
-    _renderer = ren;
 }
 
 void GameObject::_init(SDL_Renderer* ren){
     // Helper function for constructors
     // Assign _pos BEFORE calling this function
-    _ren = ren;
     int w, h = 32; // Default vals
-    _imageSize = {(float)w, (float)h};
-    _imageSize.x *= SCALE_FACTOR_X;
-    _imageSize.y *= SCALE_FACTOR_Y;
-    _srcRect = {0, 0, w, h};
-    _destRect = {(int)_pos.x, (int)_pos.y, (int)_imageSize.x, (int)_imageSize.y};
-
+    _animator = new Animator();
     _hitboxes = vector<Hitbox*>();
     _dir = {1, 0};
-}
-
-void GameObject::initAnimator(vector<string> fileNames){
-    _animator = new Animator(fileNames, _renderer);
-    int w, h;
-    SDL_QueryTexture(_animator->getNextFrame(), NULL, NULL, &w, &h);
-    _imageSize = {(float)w, (float)h};
-    _imageSize.x *= SCALE_FACTOR_X;
-    _imageSize.y *= SCALE_FACTOR_Y;
-    _srcRect = {0, 0, w, h};
-    _destRect = {(int)_pos.x, (int)_pos.y, (int)_imageSize.x, (int)_imageSize.y};
-
-}
-
-void GameObject::initAnimator(SDL_Texture* defaultTexture){
-    _animator = new Animator(defaultTexture);
-    int w, h;
-    SDL_QueryTexture(_animator->getDefaultTexture(), NULL, NULL, &w, &h);
-    _imageSize = {(float)w, (float)h};
-    _imageSize.x *= SCALE_FACTOR_X;
-    _imageSize.y *= SCALE_FACTOR_Y;
-    _srcRect = {0, 0, w, h};
-    _destRect = {(int)_pos.x, (int)_pos.y, (int)_imageSize.x, (int)_imageSize.y};
 }
 
 GameObject::~GameObject(){
@@ -144,32 +107,6 @@ string GameObject::getName(){
     return _name;
 }
 
-void GameObject::drawHitboxOutline(Hitbox* hb, SDL_Color c){
-    // Set color
-    SDL_SetRenderDrawColor(_renderer, c.r, c.g, c.b, c.a);
-    // Draw lines
-    Vector2 pos = hb->getPos();
-    Vector2 size = hb->getSize();
-    // Draw X-lines
-    for(int u = (int)pos.x; u < (int)(pos.x + size.x); u++){
-        SDL_RenderDrawPoint(_renderer, u, (int)pos.y);
-        SDL_RenderDrawPoint(_renderer, u, (int)(pos.y + size.y));
-    }
-    // Draw Y-lines
-    for(int v = (int)pos.y; v < (int)(pos.y + size.y); v++){
-        SDL_RenderDrawPoint(_renderer, (int)pos.x, v);
-        SDL_RenderDrawPoint(_renderer, (int)(pos.x + size.x), v);
-    }
-}
-
-void GameObject::drawAllHitboxOutlines(){
-    // Set color to red by default
-    SDL_Color red = {234, 19, 27, 255};
-    // Draw lines
-    for(int i = 0; i < this->getHitboxCount(); i++){
-        drawHitboxOutline(_hitboxes[i], red);
-    }
-}
 
 void GameObject::setPosition(Vector2 newPos){
     // Teleport the gameobject to a new position
@@ -223,10 +160,14 @@ SDL_Rect GameObject::getSrcRect(){
     return _animator->getSrcRect();
 }
 
+/*!
+ * Wrapper for animator getDestRect
+ * */
 SDL_Rect GameObject::getDestRect(){
-    return _destRect;
-}
+    SDL_Rect animSrcRect = _animator->getSrcRect();
 
+    return {(int)_pos.x, (int)_pos.y, animSrcRect.w, animSrcRect.h};
+}
 /*!
  * Get the frame (image) to be rendered
  * wrapper for animator, which controls what to draw on screen
@@ -240,18 +181,31 @@ void GameObject::setName(string newName){
 }
 
 Vector2 GameObject::getImageSize(){
-    return _imageSize;
+    SDL_Rect animSrcRect = _animator->getSrcRect();
+    return Vector2(animSrcRect.w, animSrcRect.h);
 }
 
-Vector2 GameObject::getPrevPos(){
-    return _prevPos;
-}
-
+/*!
+ * Get nearby hitboxes, which are set in game loop
+ * */
 vector<Hitbox*> GameObject::getNearbyHitboxes(){
     return _nearbyHitboxes;
 }
 
-
+/*!
+ * Get current direction
+ * */
 Vector2 GameObject::getDir(){
     return _dir;
+}
+
+/*!
+ * Set a new animator. This function makes sure the old animator gets freed
+ * @param[in] newAnimator The new animator. Should be created with "new" keyword
+ * */
+void GameObject::setAnimator(Animator* newAnimator){
+    // Make sure old animator gets freed
+    delete _animator;
+    // Set new animator
+    _animator = newAnimator;
 }

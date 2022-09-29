@@ -52,10 +52,6 @@ class GameObject{
         vector<Hitbox*> getHitboxes();
         vector<Hitbox*> getNearbyHitboxes();
 
-        // Initers for animator
-        void initAnimator(vector<string> fileNames);
-        void initAnimator(SDL_Texture* defaultTexture);
-
         // Update and render, collision detection
         virtual void update();
         void setNearbyHitboxes(vector<Hitbox*> hitboxes);
@@ -63,22 +59,18 @@ class GameObject{
         void clearNearbyHitboxes();
         virtual void detectCollisions();
 
+        // Animator
+        Animator* _animator;
+        void setAnimator(Animator* newAnimator);
+        
     protected:
         void _init(SDL_Renderer* ren);
-        SDL_Renderer* _renderer;
         Vector2 _pos;
-        Vector2 _prevPos; // Previous position
-        Vector2 _imageSize;
-        SDL_Rect _srcRect, _destRect;
         Vector2 _dir;
-        SDL_Renderer* _ren;
         vector<Hitbox*> _hitboxes; // Potential FIXME , might not be how to handle lists in this case
         string _name;
         int _id;
-        void drawAllHitboxOutlines();
-        void drawHitboxOutline(Hitbox* hb, SDL_Color c);
         vector<Hitbox*> _nearbyHitboxes;
-        Animator* _animator; // Optional animator
 };
 
 #endif /* GameObject_h */

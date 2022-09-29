@@ -6,6 +6,23 @@ Player::Player(){
     init();
 }
 
+Player::Player(SDL_Renderer* renderer, Animator* animator, vector<Hitbox*> hitboxes, Vector2 pos, string name) : Creature(renderer){
+    init();
+    _pos = pos;
+    // Replace animator
+    delete _animator;
+    _animator = animator;
+    if(hitboxes.size() > 0){
+        _hitboxes = hitboxes;
+    }else{
+        // autosize hitbox
+        Hitbox* hb = new Hitbox(_pos, getImageSize(), PLAYER_MASK);
+        _hitboxes.push_back(hb);
+    }
+
+    _name = name;
+}
+
 void Player::init(){
     // Initialize variables
     _speed = {0, 0};
@@ -16,7 +33,7 @@ void Player::init(){
     _onGround = false;
 
     // Initialize hitboxes
-    Hitbox* hb = new Hitbox(_pos, _imageSize, PLAYER_MASK);
+    Hitbox* hb = new Hitbox(_pos, getImageSize(), PLAYER_MASK);
     _hitboxes.push_back(hb);
 }
 
@@ -32,7 +49,7 @@ Player::Player(SDL_Renderer* ren, Vector2 position) :Creature(ren){
 /*!
  * Create Player from gameobject
  * */
-Player::Player(GameObject* base, int id) :Creature(base, id){
+Player::Player(GameObject* base, int id) : Creature(base, id){
     init();
 }
 
@@ -71,7 +88,6 @@ void Player::handleEvents(SDL_Event e){
 void Player::update(){
     move();
     detectCollisions();
-    draw();
 }
 
 /*!
@@ -80,6 +96,9 @@ void Player::update(){
 */
 void Player::move(){
     bool accelerating = std::abs(_dir.x) > 0;
+
+    // If moving (accelerating) que walk animation
+    _animator->selectSequence("Walk");
 
     _speed += _dir % _acceleration * TIME_PER_FRAME; // % is elementwise multiplication
 

@@ -30,6 +30,7 @@ const std::string HITBOX_TYPE = "Hitbox";
 
 // Paths
 const std::string ASSETS_PATH = "/home/pongu/dev/platformer-game/assets/";
+const std::string IMAGES_PATH = ASSETS_PATH + "images/";
 const std::string ASSETS_ANIMATIONS_PATH = ASSETS_PATH + "Animations/";
 const std::string PLAYER_TEXTURE_PATH = ASSETS_PATH + "images/Dude.png";
 const std::string DEFAULT_PINK_IMAGE = ASSETS_PATH + "images/Default_image.png";

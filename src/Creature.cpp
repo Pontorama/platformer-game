@@ -10,7 +10,8 @@ void Creature::init(){
     _acceleration = {0, 0};
     _dir = {0, 0};
     _onGround = false;
-    _groundChecker = new Hitbox(_pos + Vector2(0, _imageSize.y), Vector2(_imageSize.x, 5), INVISIBLE_MASK);
+    Vector2 imageSize = getImageSize();
+    _groundChecker = new Hitbox(_pos + Vector2(0, imageSize.y), Vector2(imageSize.x, 5), INVISIBLE_MASK);
     _hitboxes.push_back(_groundChecker);
 }
 
@@ -149,7 +150,6 @@ void Creature::setDir(Vector2 newDir){
 void Creature::update(){
     move();
     detectCollisions();
-    draw();
 }
 
 /*!
@@ -175,12 +175,4 @@ void Creature::move(){
     for(auto &hb : _hitboxes){
         hb->move(_speed*TIME_PER_FRAME);
     }
-}
-
-/*!
- * Update info for renderer
- * */
-void Creature::draw(){
-    _destRect.x = _pos.x;
-    _destRect.y = _pos.y;
 }

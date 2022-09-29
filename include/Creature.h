@@ -19,7 +19,6 @@ class Creature : public GameObject {
         
         void update();
         void move();
-        void draw();
 
     protected:
         Vector2 _speed;

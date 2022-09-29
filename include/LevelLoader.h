@@ -1,40 +1,32 @@
 #ifndef LevelLoader_h
 #define LevelLoader_h
 
-#include <iostream>
-#include <iomanip>
+#include "json.hpp" 
+#include <vector>
 #include <string>
-#include <fstream>
-
-#include "json.hpp"
+#include <iostream>
 #include "SDL2/SDL.h"
-#include "SDL2/SDL_image.h"
-
+#include "Vector2.h"
+#include "Hitbox.h"
+#include "Constants.h"
+#include "Animator.h"
+#include "GameExceptions.h"
+// Include Game object types
 #include "GameObject.h"
 #include "Player.h"
-#include "Constants.h"
-#include "Hitbox.h"
-#include "Vector2.h"
 #include "Platform.h"
-
 
 using namespace std;
 using json = nlohmann::json;
 
-class LevelLoader{
-    public:
-        LevelLoader(SDL_Renderer* renderer);
-        vector<GameObject*> loadLevelFromFile(string path);
-        GameObject* loadGameObjectFromJson(json object, int id);
-
-    private:
-        SDL_Renderer* _renderer;
-        
-        Platform* platformFromJson(GameObject* base, int id);
-        Player* playerFromJson(GameObject* base, int id);
-
-        Hitbox* hitboxFromJson(json::object_t object);
-
+namespace LevelLoader {
+    vector<GameObject*> loadLevelFromFile(string levelFilePath, SDL_Renderer* renderer);
+    Vector2 loadPos(json gameObjectDesc);
+    string loadName(json gameObjectDesc);
+    Animator* loadAnimator(json gameObjectDesc, SDL_Renderer* renderer);
+    vector<Hitbox*> loadHitboxes(json gameObjectDesc);
+    Player* loadPlayer(json playerDesc, SDL_Renderer* renderer);
+    Platform* loadPlatform(json platformDesc, SDL_Renderer* renderer);
 };
 
 #endif

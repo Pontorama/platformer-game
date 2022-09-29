@@ -68,6 +68,22 @@ Sequence::Sequence(string descFilePath, SDL_Renderer* renderer){
     loadFromDescFile(descFilePath, renderer);
 }
 
+Sequence::Sequence(string descFilePath, string name, SDL_Renderer* renderer){
+    loadFromDescFile(descFilePath, renderer);
+    _name = name;
+}
+
+Sequence::Sequence(vector<Frame*> frames, string name){
+    _frames = frames;
+    _name = name;
+    _currentFrame = 0;
+    _totalScreenFrameCount = 0;
+    for(auto& frame : _frames){
+        _totalScreenFrameCount += frame->getDuration() / TIME_PER_FRAME;
+    }
+    _screenFrameCounter = 0;
+}
+
 Sequence::~Sequence(){
     for(int i = 0; i < _frames.size(); i++){
         delete _frames[i];
@@ -94,7 +110,11 @@ SDL_Texture* Sequence::getNextFrame(){
 }
 
 SDL_Rect Sequence::getSrcRect(){
-    return _frames[_currentFrame]->getSrcRect();
+    if(_frames.size() > 0){
+        return _frames[_currentFrame]->getSrcRect();
+    }else{
+        return {0, 0, 0, };
+    }
 }
 
 
@@ -103,7 +123,9 @@ SDL_Rect Sequence::getSrcRect(){
  * the sequence screen frame counter
  * */
 SDL_Texture* Sequence::getCurrentFrame(){
-    return _frames[_currentFrame]->getImage();
+    if(_frames.size() > 0){
+        return _frames[_currentFrame]->getImage();
+    }
 }
 
 /*!
@@ -130,6 +152,10 @@ void Sequence::loadFromDescFile(std::string jsonFileName, SDL_Renderer* renderer
     // Fields to read from each frame:
     // - "frame" contains what pixels from the image the frame contains
     // - "duration" contains how long the frame should  be displayed, in ms
+    //
+    // Check if Field "frameTags" exist
+    //
+    // Else use tag "frames" as one sequence
     json frames = objects["frames"];
     for(auto it = frames.begin(); it != frames.end(); ++it){
         // Get sub-image size
@@ -186,6 +212,7 @@ string Sequence::getName(){
 Animator::Animator(){
     _defaultTexture = Texture::DEFAULT_PINK_TEXTURE;
     _useDefaultTexture = true;
+    _textureSharedAccessCounter = new int(1);
 }
 
 /*!
@@ -211,6 +238,12 @@ Animator::Animator(SDL_Texture* defaultTexture){
     SDL_QueryTexture(_defaultTexture, NULL, NULL, &_defaultTextureSrcRect.w, &_defaultTextureSrcRect.h);
     _textureSharedAccessCounter = new int(1);
     _useDefaultTexture = true;
+}
+
+Animator::Animator(std::string descFilePath, SDL_Renderer* renderer){
+    initFromDescFile(descFilePath, renderer);
+    _defaultTexture = Texture::DEFAULT_PINK_TEXTURE;
+    _textureSharedAccessCounter = new int(1);
 }
 
 Animator::Animator(std::map<std::string, Sequence*> sequences){
@@ -240,10 +273,36 @@ Animator::Animator(vector<string> sequenceDescFileNames, SDL_Renderer* renderer)
     _useDefaultTexture = false;
 }
 
+/*!
+ * Creates an animator object and loads sequences from file(s).
+ * @param[in] sequenceDescFileNames Path(s) to sequence descriptor file(s)
+ * @param[in] sequenceNames Names of sequences (same indexing as files)
+ * @param[in] renderer SDL renderer to handle images
+ * */
+Animator::Animator(vector<string> sequenceDescFileNames, vector<string> sequenceNames, SDL_Renderer* renderer){
+    // Construct sequences from files
+    for(int i = 0; i < sequenceDescFileNames.size(); i++){
+        Sequence* tempSeq = new Sequence(sequenceDescFileNames[i], sequenceNames[i], renderer);
+        _sequences.insert({tempSeq->getName(), tempSeq});
+        _currentSequenceName = tempSeq->getName();
+    }
+    // Use first frame as default texture
+    _defaultTexture = _sequences.begin()->second->getCurrentFrame();
+    _defaultTextureSrcRect.x = 0;
+    _defaultTextureSrcRect.y = 0;
+    SDL_QueryTexture(_defaultTexture, NULL, NULL, &_defaultTextureSrcRect.w, &_defaultTextureSrcRect.h);
+    _textureSharedAccessCounter = new int(1);
+    _useDefaultTexture = false;
+
+}
+
 Animator::~Animator(){
     (*_textureSharedAccessCounter)--;
     if(*_textureSharedAccessCounter == 0){
-        SDL_DestroyTexture(_defaultTexture);
+        // Defaut texture gets freed in Game.cpp
+        if(_defaultTexture != Texture::DEFAULT_PINK_TEXTURE){
+            SDL_DestroyTexture(_defaultTexture);
+        }
         delete _textureSharedAccessCounter;
     }
     // Free surfaces
@@ -312,7 +371,74 @@ bool Animator::getUsingDefaultTexture(){
 SDL_Rect Animator::getSrcRect(){
     if(_useDefaultTexture){
         return _defaultTextureSrcRect;
-    }else{
+    }else if(_sequences.size() > 0){
         return _sequences[_currentSequenceName]->getSrcRect();
     }
+}
+
+/*!
+ * Init sequences from a JSON description file
+ * */
+void Animator::initFromDescFile(string descFilePath, SDL_Renderer* renderer){
+    // Load file
+    ifstream inputfile(descFilePath);
+    json objects = json::parse(inputfile);
+    // Get metadata
+    // Get image file path
+    string imageFilePath = ASSETS_ANIMATIONS_PATH + objects["meta"]["image"].get<string>();
+    // Get full sprite sheet image
+    SDL_Texture* fullImage = IMG_LoadTexture(renderer, imageFilePath.c_str());
+    // Read frames
+    vector<Frame*> frames;
+    for(auto& frameDesc : objects["frames"]){
+        // Get image size & position in sprite sheet
+        SDL_Rect srcRect;
+        srcRect.x = frameDesc["frame"]["x"].get<int>();
+        srcRect.y = frameDesc["frame"]["y"].get<int>();
+        srcRect.w = frameDesc["frame"]["w"].get<int>();
+        srcRect.h = frameDesc["frame"]["h"].get<int>();
+        SDL_Rect destRect = {0, 0, srcRect.w, srcRect.h};
+        // Get frame duration in ms
+        uint duration = frameDesc["duration"].get<uint>();
+        // Get sub-image from full image
+        SDL_Texture* image = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, srcRect.w, srcRect.h);
+        SDL_SetRenderTarget(renderer, image);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+        SDL_SetTextureBlendMode(image, SDL_BLENDMODE_BLEND);
+        SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, fullImage, &srcRect, &destRect);
+        // Reset render target to screen
+        SDL_SetRenderTarget(renderer, NULL);
+        // Create frame object and add it to list
+        frames.push_back(new Frame(image, destRect, duration));
+    }
+    // First check if "frameTags" is defined 
+    if(objects.contains("frameTags")){
+        // Use names defined in this JSON
+        json frameTags = objects["meta"]["frameTags"];
+        for(auto& sequence : frameTags){
+            // iterator sequence is a list element
+            // Get name
+            string name = sequence["name"].get<string>();
+            // Get correct frames
+            int startIndex = sequence["from"].get<int>();
+            int endIndex = sequence["to"].get<int>();
+            vector<Frame*> sequenceFrames;
+            for(int i = startIndex; i <= endIndex; i++){
+                sequenceFrames[i - startIndex] = frames[i];
+            }
+            // Create sequence
+            _sequences.insert({name, new Sequence(sequenceFrames, name)});
+            _currentSequenceName = name;
+        }
+    }else{
+        // Treat all frames as one sequence
+        // Name the sequence to default name
+        _sequences.insert({DEFAULT_SEQUENCE_NAME, new Sequence(frames, DEFAULT_SEQUENCE_NAME)});
+        _currentSequenceName = DEFAULT_SEQUENCE_NAME;
+    }
+    // Close file
+    inputfile.close();
+    // Set to not use default texture
+    _useDefaultTexture = false;
 }
