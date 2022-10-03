@@ -11,6 +11,7 @@ Game::~Game(){
     delete Debug::debugLogger;
     delete _debug;
     delete _uimaster;
+    delete _settingsManager;
     delete _camera;
     // Clean gameobjects
     for(int i = 0; i < _gameObjects.size(); i++){
@@ -23,7 +24,12 @@ Game::~Game(){
     SDL_Quit();
 }
 
-void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen){
+void Game::init(const char* title, int xpos, int ypos){
+    // Initialize settings manager
+    _settingsManager = new SettingsManager(ASSETS_PATH + "Settings.json");
+    int windowWidth = _settingsManager->getSettingValue<int>("window_size_x");
+    int windowHeight = _settingsManager->getSettingValue<int>("window_size_y");
+    bool fullscreen = _settingsManager->getSettingValue<bool>("fullscreen");
     // Initialize SDL
     if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
         // Successfully initialized
@@ -37,7 +43,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         cout << "SDL subsystems initialized successfully!" << endl;
 
         // Create window
-        _window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
+        _window = SDL_CreateWindow(title, xpos, ypos, windowWidth, windowHeight, flags);
         if(_window){
             cout << "Window created!" << endl;
         }

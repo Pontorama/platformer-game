@@ -16,13 +16,14 @@
 #include "LevelLoader.h"
 #include "UIMaster.h"
 #include "Camera.h"
+#include "SettingsManager.h"
 
 class Game{
     public:
         Game();
         ~Game();
 
-        void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen); // Function to initialize the game window
+        void init(const char* title, int xpos, int ypos); // Function to initialize the game window
 
         void handleEvents(); // Input, other window events etc
         void handleInput();
@@ -42,6 +43,7 @@ class Game{
         std::vector<GameObject*> _gameObjects; // Potential FIXME , might not be how to handle lists in this case
         UIMaster* _uimaster;
         DebugLogger* _debug;
+        SettingsManager* _settingsManager;
         const float HITBOX_SCAN_RADIUS = 2000; // FIXME: Test for good value. Should prob be size of screen
 };
 

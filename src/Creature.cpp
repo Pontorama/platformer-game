@@ -28,7 +28,6 @@ Creature::Creature(GameObject* base, int id) : GameObject(base, id){
 
 Creature::Creature(SDL_Renderer* ren) :GameObject(ren){
     init();
-
 }
 
 Creature::~Creature(){
