@@ -8,7 +8,7 @@
   "1": {
     "type": "Platform",
     "name": "Platform2",
-    "position": { "x": 30, "y": 700 },
+    "position": { "x": 30, "y": 50 },
     "TexturePath": "Platform.png",
     "Hitboxes": {}
   },
@@ -22,13 +22,13 @@
   "3": {
     "type": "Platform",
     "name": "Platform3",
-    "position": { "x": 700, "y": 700 },
+    "position": { "x": 50, "y": 50 },
     "TexturePath": "Platform.png"
   },
   "4": {
     "type": "Platform",
     "name": "BlinkingBox",
-    "position": { "x": 200, "y": 200 },
+    "position": { "x": 70, "y": 10 },
     "animations": "Animation-test-sprite.json"
   }
 }

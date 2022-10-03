@@ -1,0 +1,13 @@
+{
+  "_comment": "Do not modify this file! It contains default settings values. Change Settings.json instead.",
+  "Settings": {
+    "window_size_x": { "type": "int", "value": 1200 },
+    "window_size_y": { "type": "int", "value": 900 },
+    "fullscreen": { "type": "bool", "value": false },
+    "framerate": { "type": "int", "value": 60 },
+    "debug_mode": { "type": "bool", "value": true },
+    "debug_camera_mode": { "type": "bool", "value": true },
+    "gravity": { "type": "float", "value": 0.01 },
+    "small_distance": { "type": "float", "value": 0.01 }
+  }
+}

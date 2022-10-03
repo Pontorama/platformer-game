@@ -5,7 +5,7 @@ CC = g++
 LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf
 
 #Compiler flags
-COMPILER_FLAGS = -w -Iinclude -Ilib
+COMPILER_FLAGS = -w -Iinclude -Ilib -std=c++14
 
 #Name of output file
 OUTPUT = bin/main

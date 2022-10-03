@@ -13,7 +13,7 @@ int main(int argc, char* args[]){
 
     Game game = Game();
 
-    game.init("Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, false);
+    game.init("Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
     while(game.running()){
         // Do game loop
