@@ -209,3 +209,10 @@ void GameObject::setAnimator(Animator* newAnimator){
     // Set new animator
     _animator = newAnimator;
 }
+
+/*!
+ * Get numerical ID of game object
+ * */
+int GameObject::getID(){
+    return _id;
+}

@@ -25,13 +25,14 @@ const string TYPE_BOOL = "bool";
 // Exceptions
 class SettingNotFoundException : public exception {
     public:
-        SettingNotFoundException(string settingName) : _settingName(settingName){}
-        const char* what(){
-            string out = "Setting '" + _settingName + "' not found.";
-            return out.c_str();
+        SettingNotFoundException(string settingName) : _settingName(settingName) {}
+        const char* what() {
+            _errorMessage = "Setting '" + _settingName + "' not found.";
+            return _errorMessage.c_str();
         }
     private:
         string _settingName;
+        string _errorMessage;
 };
 
 class ValueTypeMismatchException : public exception {

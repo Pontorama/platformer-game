@@ -11,8 +11,6 @@ void Creature::init(){
     _dir = {0, 0};
     _onGround = false;
     Vector2 imageSize = getImageSize();
-    _groundChecker = new Hitbox(_pos + Vector2(0, imageSize.y), Vector2(imageSize.x, 5), INVISIBLE_MASK);
-    _hitboxes.push_back(_groundChecker);
 }
 
 /*!

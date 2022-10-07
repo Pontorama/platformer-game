@@ -7,6 +7,7 @@
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL.h"
 
+#include "GameManager.h"
 #include "Vector2.h"
 #include "Constants.h"
 #include "GameObject.h"
@@ -18,12 +19,13 @@
 #include "Camera.h"
 #include "SettingsManager.h"
 
-class Game{
+
+class Game : public GameManager {
     public:
         Game();
         ~Game();
 
-        void init(const char* title, int xpos, int ypos); // Function to initialize the game window
+        void init(SDL_Renderer* renderer);
 
         void handleEvents(); // Input, other window events etc
         void handleInput();
@@ -33,6 +35,9 @@ class Game{
         void checkForCollisions();
         void hitboxProximityUpdate();
         bool running();
+
+        GameObject* getGameObject(string name);
+        GameObject* getGameObject(int id);
 
     private:
         bool _isRunning;

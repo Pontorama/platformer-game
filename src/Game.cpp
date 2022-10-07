@@ -8,7 +8,6 @@ Game::Game(){
 
 Game::~Game(){
     // Clean up UI things
-    delete Debug::debugLogger;
     delete _debug;
     delete _uimaster;
     delete _settingsManager;
@@ -24,63 +23,19 @@ Game::~Game(){
     SDL_Quit();
 }
 
-void Game::init(const char* title, int xpos, int ypos){
+void Game::init(SDL_Renderer* renderer){
     // Initialize settings manager
-    _settingsManager = new SettingsManager(ASSETS_PATH + "Settings.json");
-    int windowWidth = _settingsManager->getSettingValue<int>("window_size_x");
-    int windowHeight = _settingsManager->getSettingValue<int>("window_size_y");
-    bool fullscreen = _settingsManager->getSettingValue<bool>("fullscreen");
-    // Initialize SDL
-    if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
-        // Successfully initialized
-
-        // Fullscreen?
-        int flags = 0;
-        if(fullscreen){
-            flags = SDL_WINDOW_FULLSCREEN;
-        }
-
-        cout << "SDL subsystems initialized successfully!" << endl;
-
-        // Create window
-        _window = SDL_CreateWindow(title, xpos, ypos, windowWidth, windowHeight, flags);
-        if(_window){
-            cout << "Window created!" << endl;
-        }
-
-        // Create renderer
-        _renderer = SDL_CreateRenderer(_window, -1, 0);
-        if(_renderer){
-            SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
-            cout << "Renderer Created!" << endl;
-        }
-
-        _isRunning = true;
-
+    _isRunning = true;
+    _renderer = renderer;
         // Initialize gameobjects
-        _gameObjects = LevelLoader::loadLevelFromFile(ASSETS_PATH + "levels/Test_with_animations.json", _renderer);
-        _player = (Player*)_gameObjects[2];
-        cout << "Game objects initialized! Loaded " << _gameObjects.size() << " Objects!" << endl;
-    }
-    else{
-        cout << "SDL could not initialize!" << endl;
-        _isRunning = false;
-    }
+    _gameObjects = LevelLoader::loadLevelFromFile(ASSETS_PATH + "levels/Test_with_animations.json", renderer);
+    _player = (Player*)_gameObjects[2];
+    cout << "Game objects initialized! Loaded " << _gameObjects.size() << " Objects!" << endl;
     // Load default image
     Texture::DEFAULT_PINK_TEXTURE = IMG_LoadTexture(_renderer, DEFAULT_PINK_IMAGE.c_str());
 
-    // Init UI
-    _uimaster = new UIMaster(_renderer);
-    _debug = new DebugLogger(0, _renderer, TTF_OpenFont("fonts/DejaVuSansMono.ttf", 20));
-    _uimaster->addElement(_debug);
-    // Set global pointer
-    Debug::debugLogger = (DebugLogger*)_uimaster->getElement(0);
-    Debug::debugLogger->setVisible(true);
-    cout << "UI initialized!" << endl;
-
-    // Init Camera
     // STRETCH: Multiple cameras
-    _camera = new Camera(_renderer); 
+    _camera = new Camera(renderer); 
     _camera->setObjectToFollow(_player);
     _camera->setFollowMode(true);
     cout << "Camera initialized!" << endl;
@@ -128,9 +83,6 @@ void Game::render(){
     if(DEBUG_MODE){
         _camera->renderDebug(_gameObjects);
     }
-    // Render UI
-    _uimaster->renderAllElements();
-
     SDL_RenderPresent(_renderer);
 }
 
@@ -172,4 +124,28 @@ void Game::hitboxProximityUpdate(){
             }
         }
     }
+}
+
+/*!
+ * Get a game object by name
+ * The return value needs to be null checked
+ * @param[in] name The name of the game object to get
+ * @return The game object if found, nullptr if not
+ * */
+GameObject* Game::getGameObject(string name){
+    for(auto& go : _gameObjects){
+        if(go->getName() == name){
+            return go;
+        }
+    }
+    return nullptr;
+}
+
+GameObject* Game::getGameObject(int id){
+    for(auto& go : _gameObjects){
+        if(go->getID() == id){
+            return go;
+        }
+    }
+    return nullptr;
 }

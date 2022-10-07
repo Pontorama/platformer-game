@@ -14,7 +14,7 @@ const float SCALE_FACTOR_X = 5;
 const float SCALE_FACTOR_Y = 5;
 
 // Physics constants
-const float GRAVITY = 0.01;
+const float GRAVITY = 0.005;
 const float SMALL_DIST = 0.01;
 // Masks
 const int DEFAULT_MASK = 0;
