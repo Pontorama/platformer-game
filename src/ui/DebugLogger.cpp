@@ -69,5 +69,3 @@ void DebugLogger::log(string logText){
         _lines.erase(_lines.begin());
     }
 }
-
-DebugLogger* Debug::debugLogger;

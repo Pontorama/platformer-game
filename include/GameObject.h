@@ -32,6 +32,7 @@ class GameObject{
         float getYPos();
         Vector2 getPos();
         string getName();
+        int getID();
         void setName(string newName);
         SDL_Rect getSrcRect();
         SDL_Rect getDestRect();

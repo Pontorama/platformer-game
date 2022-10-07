@@ -8,6 +8,7 @@
 #include <cmath>
 #include "DebugLogger.h"
 #include "Creature.h"
+#include "ServiceLocator.h"
 
 class Player : public Creature {
     public:
@@ -29,10 +30,11 @@ class Player : public Creature {
         bool _doJump;
 
         void setPosition(Vector2 newPos);
-        const float MAX_DIR_LEN = 1.5;
-        const float PLAYER_MAX_SPEED = 0.5;
-        const float PLAYER_SLOWDOWN_ACC = 0.1;
-        const float PLAYER_MIN_SPEED = PLAYER_MAX_SPEED / 8;
+        float MAX_DIR_LEN = 1.5;
+        float PLAYER_MAX_SPEED_X;
+        float PLAYER_MAX_SPEED_Y;
+        float PLAYER_SLOWDOWN_ACC = 0.1;
+        float PLAYER_MIN_SPEED_X;
         void terrainCollision(Hitbox* local, Hitbox* terrain);
         void init();
 };

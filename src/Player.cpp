@@ -19,16 +19,20 @@ Player::Player(SDL_Renderer* renderer, Animator* animator, vector<Hitbox*> hitbo
         Hitbox* hb = new Hitbox(_pos, getImageSize(), PLAYER_MASK);
         _hitboxes.push_back(hb);
     }
-
+    _groundChecker = new Hitbox(_pos + Vector2(0, getImageSize().y), Vector2(getImageSize().x, 5), INVISIBLE_MASK);
+    _hitboxes.push_back(_groundChecker);
     _name = name;
 }
 
 void Player::init(){
-    // Initialize variables
+    SettingsManager* sm = Services::locator->getSettingsManager();
+    PLAYER_MAX_SPEED_X = sm->getSettingValue<float>("player_max_speed_x");
+    PLAYER_MAX_SPEED_Y = sm->getSettingValue<float>("player_max_speed_y");
+    PLAYER_MIN_SPEED_X = PLAYER_MIN_SPEED_X / 8;
     _speed = {0, 0};
     _pos = {0, 0};
     _acceleration = {0.005, 0.005};
-    _jumpSpeed = 2.5;
+    _jumpSpeed = sm->getSettingValue<float>("player_jump_speed");
     _doJump = false;
     _onGround = false;
 
@@ -102,8 +106,8 @@ void Player::move(){
 
     _speed += _dir % _acceleration * TIME_PER_FRAME; // % is elementwise multiplication
 
-    if(std::abs(_speed.x) > PLAYER_MAX_SPEED){
-        _speed.x = _speed.x * (PLAYER_MAX_SPEED / std::abs(_speed.x));
+    if(std::abs(_speed.x) > PLAYER_MAX_SPEED_X){
+        _speed.x = _speed.x * (PLAYER_MAX_SPEED_X / std::abs(_speed.x));
     }
 
     if(!accelerating) // Only deccelerate if not accelerating
@@ -120,9 +124,13 @@ void Player::move(){
     }
 
     // Stop player completely if speed is low enough
-    if(std::abs(_speed.x) <= PLAYER_MIN_SPEED && !accelerating)
+    if(std::abs(_speed.x) <= PLAYER_MIN_SPEED_X && !accelerating)
         _speed.x = 0;
 
+    // Cap speed in y dir
+    if(std::abs(_speed.y) > PLAYER_MAX_SPEED_Y){
+        _speed.y = _speed.y * (PLAYER_MAX_SPEED_Y / std::abs(_speed.y));
+    }
     // Update player position
     _pos += _speed * TIME_PER_FRAME;
 

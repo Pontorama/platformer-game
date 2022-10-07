@@ -14,9 +14,10 @@ Camera::~Camera(){
  * */
 void Camera::init(){
     // TODO: Test these values
-    _scrollSpeedX = 0.2;
-    _scrollSpeedY = 0.2;
-    _zoomLevel = 1;
+    SettingsManager* sm = Services::locator->getSettingsManager();
+    _scrollSpeedX = sm->getSettingValue<float>("camera_scroll_speed_x");
+    _scrollSpeedY = sm->getSettingValue<float>("camera_scroll_speed_y");
+    _zoomLevel = sm->getSettingValue<float>("camera_default_zoom");
 
     _viewSize = {DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT};
 

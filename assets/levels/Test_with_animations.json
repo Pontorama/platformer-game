@@ -2,7 +2,7 @@
   "0": {
     "type": "Platform",
     "name": "Platform1",
-    "position": { "x": 0, "y": 20 },
+    "position": { "x": 0, "y": 30 },
     "TexturePath": "Platform.png"
   },
   "1": {

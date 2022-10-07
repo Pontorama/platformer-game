@@ -1,16 +1,18 @@
 #ifndef Logger_h
 #define Logger_h
 
+#include <string>
 
+using namespace std;
 
-class Logger{
+/*
+ * Interface for loggers
+ * */
+
+class Logger {
     public:
-        // Constructors
-        Logger();
-
-        void update();
-    private:
-        
+        virtual ~Logger();
+        virtual void log(string message);       
 };
 
 #endif /* Logger.h */

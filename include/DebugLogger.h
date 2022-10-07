@@ -8,8 +8,9 @@
 #include "SDL2/SDL_ttf.h"
 #include "TextBox.h"
 #include "Constants.h"
+#include "Logger.h"
 
-class DebugLogger : public TextBox{
+class DebugLogger : public TextBox, public Logger {
     // TODO add list of logs
     public:
         // Constructors
@@ -33,9 +34,5 @@ class DebugLogger : public TextBox{
         const int MAX_N_LINES = 5;
         SDL_Rect _borderBox;
 };
-
-namespace Debug{
-    extern DebugLogger* debugLogger;
-}
 
 #endif /* Debugger.h */

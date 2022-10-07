@@ -1,5 +1,4 @@
 {
-  "_comment": "Do not modify this file! It contains default settings values. Change Settings.json instead.",
   "Settings": {
     "window_size_x": { "type": "int", "value": 1200 },
     "window_size_y": { "type": "int", "value": 900 },
@@ -8,6 +7,17 @@
     "debug_camera_mode": { "type": "bool", "value": true },
     "gravity": { "type": "float", "value": 0.01 },
     "small_distance": { "type": "float", "value": 0.01 },
-    "fullscreen": { "type": "bool", "value": false }
+    "fullscreen": { "type": "bool", "value": false },
+    "default_font_path": {
+      "type": "string",
+      "value": "assets/fonts/DejaVuSansMono.ttf"
+    },
+    "default_font_size": { "type": "int", "value": 20 },
+    "camera_default_zoom": { "type": "float", "value": 5 },
+    "camera_scroll_speed_x": { "type": "float", "value": 0.2 },
+    "camera_scroll_speed_y": { "type": "float", "value": 0.2 },
+    "player_jump_speed": { "type": "float", "value": 1 },
+    "player_max_speed_x": { "type": "float", "value": 0.5 },
+    "player_max_speed_y": { "type": "float", "value": 5 }
   }
 }

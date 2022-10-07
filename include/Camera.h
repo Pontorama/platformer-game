@@ -9,6 +9,7 @@
 #include "CameraUtils.h"
 #include "DebugLogger.h"
 #include <vector>
+#include "ServiceLocator.h"
 
 using namespace Vector;
 using namespace std;
